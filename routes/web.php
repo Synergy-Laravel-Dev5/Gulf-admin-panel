@@ -1,0 +1,122 @@
+<?php
+
+use Illuminate\Support\Facades\Route;
+use App\Http\Controllers\WebsiteController;
+use App\Http\Controllers\AuthController;
+use App\Http\Controllers\UserController;
+use App\Http\Controllers\VisaApplicationController;
+use App\Http\Controllers\DashboardController;
+use App\Http\Controllers\HajjPackageController;
+use App\Http\Controllers\UmrahPackageController;
+use App\Http\Controllers\DomesticPackageController;
+use App\Http\Controllers\InternationalPackageController;
+use App\Http\Controllers\PackageBookingController;
+use App\Http\Controllers\VisaCountryController;
+use Illuminate\Support\Facades\Mail;
+
+
+
+Route::middleware('guest')->group(function () {
+
+    Route::get('/login', [AuthController::class, 'showLoginForm'])->name('login');
+    Route::post('/login', [AuthController::class, 'login'])->name('login.post');
+
+    Route::get('/', function () {
+        return redirect()->route('login');
+    });
+});
+
+Route::middleware('auth')->group(function () {
+    Route::get('/dashboard', [DashboardController::class, 'index'])->name('dashboard');
+    Route::post('/logout', [AuthController::class, 'logout'])->name('logout');
+    Route::prefix('admin')->group(function () {
+
+        Route::controller(UserController::class)
+            ->prefix('user')
+            ->group(function () {
+                Route::get('/', 'index')->name('user.index');
+                Route::get('/create', 'create')->name('user.create');
+                Route::post('/store', 'store')->name('user.store');
+                Route::get('/edit/{id}', 'edit')->name('user.edit');
+                Route::put('/update/{id}', 'update')->name('user.update');
+                Route::delete('/delete/{id}', 'destroy')->name('user.delete');
+                Route::get('/trash', 'trash')->name('user.trash');
+                Route::get('/restore/{id}', 'restore')->name('user.restore');
+            });
+
+
+        Route::controller(VisaApplicationController::class)->prefix('visa-application')->group(function () {
+            Route::get('/', 'index')->name('visa-application.index');
+            Route::get('/show/{id}', 'show')->name('visa-application.show');
+            Route::get('/edit/{id}', 'edit')->name('visa-application.edit');
+            Route::delete('/delete/{id}', 'destroy')->name('visa-application.delete');
+            Route::get('/trash', 'trash')->name('visa-application.trash');
+        });
+
+
+        Route::controller(HajjPackageController::class)->prefix('hajj-package')->group(function () {
+            Route::get('/', 'index')->name('hajj-package.index');
+            Route::get('/create', 'create')->name('hajj-package.create');
+            Route::post('/store', 'store')->name('hajj-package.store');
+            Route::get('/edit/{id}', 'edit')->name('hajj-package.edit');
+            Route::put('/update/{id}', 'update')->name('hajj-package.update');
+            Route::delete('/delete/{id}', 'destroy')->name('hajj-package.delete');
+            Route::get('/trash', 'trash')->name('hajj-package.trash');
+            Route::get('/restore/{id}', 'restore')->name('hajj-package.restore');
+        });
+
+        Route::controller(UmrahPackageController::class)->prefix('umrah-package')->group(function () {
+            Route::get('/', 'index')->name('umrah-package.index');
+            Route::get('/create', 'create')->name('umrah-package.create');
+            Route::post('/store', 'store')->name('umrah-package.store');
+            Route::get('/edit/{id}', 'edit')->name('umrah-package.edit');
+            Route::put('/update/{id}', 'update')->name('umrah-package.update');
+            Route::delete('/delete/{id}', 'destroy')->name('umrah-package.delete');
+            Route::get('/trash', 'trash')->name('umrah-package.trash');
+            Route::get('/restore/{id}', 'restore')->name('umrah-package.restore');
+        });
+
+        Route::controller(DomesticPackageController::class)->prefix('domestic-package')->group(function () {
+            Route::get('/', 'index')->name('domestic-package.index');
+            Route::get('/create', 'create')->name('domestic-package.create');
+            Route::post('/store', 'store')->name('domestic-package.store');
+            Route::get('/edit/{id}', 'edit')->name('domestic-package.edit');
+            Route::put('/update/{id}', 'update')->name('domestic-package.update');
+            Route::delete('/delete/{id}', 'destroy')->name('domestic-package.delete');
+            Route::get('/trash', 'trash')->name('domestic-package.trash');
+            Route::get('/restore/{id}', 'restore')->name('domestic-package.restore');
+        });
+
+        Route::controller(InternationalPackageController::class)->prefix('international-package')->group(function () {
+            Route::get('/', 'index')->name('international-package.index');
+            Route::get('/create', 'create')->name('international-package.create');
+            Route::post('/store', 'store')->name('international-package.store');
+            Route::get('/edit/{id}', 'edit')->name('international-package.edit');
+            Route::put('/update/{id}', 'update')->name('international-package.update');
+            Route::delete('/delete/{id}', 'destroy')->name('international-package.delete');
+            Route::get('/trash', 'trash')->name('international-package.trash');
+            Route::get('/restore/{id}', 'restore')->name('international-package.restore');
+        });
+
+
+        Route::controller(PackageBookingController::class)->prefix('package-booking')->group(function () {
+            Route::get('/', 'index')->name('package-booking.index');
+            Route::get('/show/{id}', 'show')->name('package-booking.show');
+            Route::put('/status/{id}', 'updateStatus')->name('package-booking.status');
+            Route::delete('/delete/{id}', 'destroy')->name('package-booking.delete');
+        });
+
+        Route::controller(VisaCountryController::class)
+            ->prefix('visa-country')
+            ->group(function () {
+                Route::get('/', 'index')->name('visa-country.index');
+                Route::get('/create', 'create')->name('visa-country.create');
+                Route::post('/store', 'store')->name('visa-country.store');
+                Route::get('/edit/{id}', 'edit')->name('visa-country.edit');
+                Route::put('/update/{id}', 'update')->name('visa-country.update');
+                Route::delete('/delete/{id}', 'destroy')->name('visa-country.delete');
+                Route::get('/trash', 'trash')->name('visa-country.trash');
+                Route::get('/restore/{id}', 'restore')->name('visa-country.restore');
+            });
+    });
+});
