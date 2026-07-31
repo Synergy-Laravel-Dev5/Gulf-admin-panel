@@ -9,6 +9,7 @@ use App\Http\Controllers\Api\UmrahPackageController;
 use App\Http\Controllers\Api\DomesticPackageController;
 use App\Http\Controllers\Api\InternationalPackageController;
 use App\Http\Controllers\Api\PackageBookingController;
+use App\Http\Controllers\Api\HotelController;
 use Illuminate\Support\Facades\Route;
 
 
@@ -38,6 +39,12 @@ Route::get('domestic-packages/{id}', [DomesticPackageController::class, 'show'])
 Route::get('international-packages', [InternationalPackageController::class, 'index']);
 Route::get('international-packages/{id}', [InternationalPackageController::class, 'show']);
 
+Route::get('hotels', [HotelController::class, 'index']);
+Route::get('hotels/cities', [HotelController::class, 'cities']);
+Route::get('hotels/{id}', [HotelController::class, 'show']);
+
+Route::post('package-bookings', [PackageBookingController::class, 'store']);
+
 
 Route::middleware('auth:sanctum')->group(function () {
 
@@ -57,7 +64,6 @@ Route::middleware('auth:sanctum')->group(function () {
     Route::put('visa-applications/{id}/status', [VisaApplicationController::class, 'updateStatus']);
     Route::delete('visa-applications/{id}', [VisaApplicationController::class, 'destroy']);
 
-    Route::post('package-bookings', [PackageBookingController::class, 'store']);
     Route::get('package-bookings', [PackageBookingController::class, 'index']);
     Route::get('package-bookings/{id}', [PackageBookingController::class, 'show']);
 });

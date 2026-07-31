@@ -3,6 +3,7 @@
 namespace App\Http\Controllers;
 
 use App\Models\InternationalPackage;
+use App\Models\Hotel;
 use Illuminate\Http\Request;
 
 class InternationalPackageController extends Controller
@@ -15,7 +16,8 @@ class InternationalPackageController extends Controller
 
     public function create()
     {
-        return view('international_package.create');
+        $hotels = Hotel::where('status', 'active')->get();
+        return view('international_package.create', compact('hotels'));
     }
 
     public function store(Request $request)
@@ -54,7 +56,8 @@ class InternationalPackageController extends Controller
     public function edit($id)
     {
         $package = InternationalPackage::findOrFail($id);
-        return view('international_package.edit', compact('package'));
+        $hotels  = Hotel::where('status', 'active')->get();
+        return view('international_package.edit', compact('package', 'hotels'));
     }
 
     public function update(Request $request, $id)

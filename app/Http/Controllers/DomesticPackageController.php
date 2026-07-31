@@ -3,6 +3,7 @@
 namespace App\Http\Controllers;
 
 use App\Models\DomesticPackage;
+use App\Models\Hotel;
 use Illuminate\Http\Request;
 
 class DomesticPackageController extends Controller
@@ -15,7 +16,8 @@ class DomesticPackageController extends Controller
 
     public function create()
     {
-        return view('domestic_package.create');
+        $hotels = Hotel::where('status', 'active')->get();
+        return view('domestic_package.create', compact('hotels'));
     }
 
     public function store(Request $request)
@@ -50,7 +52,8 @@ class DomesticPackageController extends Controller
     public function edit($id)
     {
         $package = DomesticPackage::findOrFail($id);
-        return view('domestic_package.edit', compact('package'));
+        $hotels  = Hotel::where('status', 'active')->get();
+        return view('domestic_package.edit', compact('package', 'hotels'));
     }
 
     public function update(Request $request, $id)

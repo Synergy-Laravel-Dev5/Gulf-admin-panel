@@ -9,4 +9,9 @@ class HajjPackage extends Model
 {
     use SoftDeletes;
     protected $guarded = [];
+
+    public function getTypeAttribute()
+    {
+        return 'hajj';
+    }
 }

@@ -118,5 +118,16 @@ Route::middleware('auth')->group(function () {
                 Route::get('/trash', 'trash')->name('visa-country.trash');
                 Route::get('/restore/{id}', 'restore')->name('visa-country.restore');
             });
+
+        Route::controller(\App\Http\Controllers\HotelController::class)
+            ->prefix('hotel')
+            ->group(function () {
+                Route::get('/', 'index')->name('hotel.index');
+                Route::get('/create', 'create')->name('hotel.create');
+                Route::post('/store', 'store')->name('hotel.store');
+                Route::get('/edit/{id}', 'edit')->name('hotel.edit');
+                Route::put('/update/{id}', 'update')->name('hotel.update');
+                Route::delete('/delete/{id}', 'destroy')->name('hotel.delete');
+            });
     });
 });

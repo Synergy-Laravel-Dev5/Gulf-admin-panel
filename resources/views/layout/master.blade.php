@@ -32,8 +32,8 @@
     <!-- Fonts -->
     <link href="https://fonts.googleapis.com/css2?family=Outfit:wght@700;800&display=swap" rel="stylesheet">
 
-    <!-- Summernote CSS -->
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/summernote/0.8.20/summernote-bs4.min.css">
+    <!-- Summernote Lite CSS -->
+    <link href="https://cdn.jsdelivr.net/npm/summernote@0.8.18/dist/summernote-lite.min.css" rel="stylesheet">
 
 </head>
 
@@ -45,7 +45,7 @@
         @include('layout.header')
 
         <script src="{{ asset('assets/libs/jquery/jquery.min.js') }}"></script>
-        <script src="https://cdnjs.cloudflare.com/ajax/libs/summernote/0.8.20/summernote-bs4.min.js"></script>
+        <script src="https://cdn.jsdelivr.net/npm/summernote@0.8.18/dist/summernote-lite.min.js"></script>
 
         @yield('content')
 
@@ -83,6 +83,23 @@
             document.addEventListener("DOMContentLoaded", function() {
                 if (typeof feather !== "undefined") {
                     feather.replace();
+                }
+
+                if (typeof $ !== "undefined" && $.fn.summernote) {
+                    $('.summernote').summernote({
+                        placeholder: 'Type content here...',
+                        tabsize: 2,
+                        height: 150,
+                        toolbar: [
+                            ['style', ['style']],
+                            ['font', ['bold', 'underline', 'clear']],
+                            ['color', ['color']],
+                            ['para', ['ul', 'ol', 'paragraph']],
+                            ['table', ['table']],
+                            ['insert', ['link']],
+                            ['view', ['fullscreen', 'codeview']]
+                        ]
+                    });
                 }
             });
         </script>

@@ -8,6 +8,7 @@ class PackageBooking extends Model
 {
     protected $fillable = [
         'package_id',
+        'package_type',
         'user_id',
         'full_name',
         'cnic',
@@ -23,7 +24,7 @@ class PackageBooking extends Model
 
     public function package()
     {
-        return $this->belongsTo(Package::class);
+        return $this->morphTo(__FUNCTION__, 'package_type', 'package_id');
     }
 
     public function user()

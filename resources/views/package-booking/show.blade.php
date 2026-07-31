@@ -74,7 +74,7 @@
                             </div>
                             <div class="card-body">
                                 <p><strong>Title:</strong> {{ $booking->package->title ?? 'N/A' }}</p>
-                                <p class="text-uppercase"><strong>Type:</strong> {{ $booking->package->type ?? 'N/A' }}</p>
+                                <p class="text-uppercase"><strong>Type:</strong> {{ $booking->package->type ?? $booking->package_type ?? 'N/A' }}</p>
                                 <p><strong>Applied By:</strong> {{ $booking->user->name ?? 'Guest' }}</p>
                             </div>
                         </div>

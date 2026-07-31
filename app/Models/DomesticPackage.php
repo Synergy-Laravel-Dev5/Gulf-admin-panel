@@ -9,4 +9,9 @@ class DomesticPackage extends Model
 {
     use SoftDeletes;
     protected $guarded = [];
+
+    public function getTypeAttribute()
+    {
+        return 'domestic';
+    }
 }

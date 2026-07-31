@@ -9,4 +9,9 @@ class UmrahPackage extends Model
 {
     use SoftDeletes;
     protected $guarded = [];
+
+    public function getTypeAttribute()
+    {
+        return 'umrah';
+    }
 }

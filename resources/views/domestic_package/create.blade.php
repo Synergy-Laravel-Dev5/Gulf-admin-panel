@@ -66,8 +66,14 @@
 
                                         <div class="col-md-6 mb-3">
                                             <label class="form-label">Hotel Name</label>
-                                            <input type="text" name="hotel_name" class="form-control"
-                                                value="{{ old('hotel_name') }}">
+                                            <select name="hotel_name" class="form-select">
+                                                <option value="">Select Hotel</option>
+                                                @foreach ($hotels as $hotel)
+                                                    <option value="{{ $hotel->name }}" {{ old('hotel_name') == $hotel->name ? 'selected' : '' }}>
+                                                        {{ $hotel->name }} ({{ ucfirst($hotel->city) }} - {{ $hotel->star_rating }}★)
+                                                    </option>
+                                                @endforeach
+                                            </select>
                                         </div>
 
                                         <div class="col-md-6 mb-3">

@@ -152,6 +152,13 @@
                     </a>
                 </li>
 
+                <li>
+                    <a class="tp-link" href="{{ route('hotel.index') }}">
+                        <i data-feather="briefcase"></i>
+                        <span>Hotels</span>
+                    </a>
+                </li>
+
 
             </ul>
         </div>

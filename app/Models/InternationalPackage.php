@@ -9,4 +9,9 @@ class InternationalPackage extends Model
 {
     use SoftDeletes;
     protected $guarded = [];
+
+    public function getTypeAttribute()
+    {
+        return 'international';
+    }
 }
