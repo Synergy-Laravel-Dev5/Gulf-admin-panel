@@ -12,7 +12,12 @@ class DatabaseSeeder extends Seeder
     {
         $this->call([
             VisaCountrySeeder::class,
+            CitySeeder::class,
             HotelSeeder::class,
+            HajjPackageSeeder::class,
+            UmrahPackageSeeder::class,
+            DomesticPackageSeeder::class,
+            InternationalPackageSeeder::class,
         ]);
 
         User::firstOrCreate(

@@ -39,19 +39,17 @@
                                                 placeholder="e.g. Swissôtel Makkah" value="{{ old('name') }}" required>
                                         </div>
 
-                                        <div class="col-md-6 mb-3">
-                                            <label class="form-label">City <span class="text-danger">*</span></label>
-                                            <input type="text" name="city" class="form-control" list="citiesList"
-                                                placeholder="e.g. Makkah, Madinah, Jeddah, Dubai, Istanbul" value="{{ old('city') }}" required>
-                                            <datalist id="citiesList">
-                                                <option value="makkah">
-                                                <option value="madinah">
-                                                <option value="jeddah">
-                                                <option value="riyadh">
-                                                <option value="dubai">
-                                                <option value="istanbul">
-                                            </datalist>
-                                        </div>
+                                         <div class="col-md-6 mb-3">
+                                             <label class="form-label">City <span class="text-danger">*</span></label>
+                                             <select name="city" class="form-select" required>
+                                                 <option value="">Select City</option>
+                                                 @foreach($cities as $city)
+                                                     <option value="{{ $city->name }}" {{ old('city') == $city->name ? 'selected' : '' }}>
+                                                         {{ ucfirst($city->name) }} ({{ $city->country }})
+                                                     </option>
+                                                 @endforeach
+                                             </select>
+                                         </div>
 
                                         <div class="col-md-6 mb-3">
                                             <label class="form-label">Star Rating <span class="text-danger">*</span></label>

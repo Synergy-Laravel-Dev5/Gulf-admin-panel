@@ -28,6 +28,11 @@ class HotelSeeder extends Seeder
             ['name' => 'Taif Al Nibras',                'city' => 'madinah',  'distance' => '200 Meters', 'star_rating' => '3'],
             ['name' => 'Al Aqeeq Hotel',                'city' => 'madinah',  'distance' => '350 Meters', 'star_rating' => '3'],
 
+            // Azizia Hotels
+            ['name' => 'Al-Kiswah Towers Azizia',       'city' => 'azizia',   'distance' => '2 KM',       'star_rating' => '4'],
+            ['name' => 'Azizia Grand Hotel',            'city' => 'azizia',   'distance' => '1.5 KM',     'star_rating' => '3'],
+            ['name' => 'Dar Al-Hadi Azizia',            'city' => 'azizia',   'distance' => '2.2 KM',     'star_rating' => '3'],
+
             // Jeddah Hotels
             ['name' => 'Jeddah Hilton',                 'city' => 'jeddah',   'distance' => 'Corniche Road', 'star_rating' => '5'],
             ['name' => 'Rosewood Jeddah',               'city' => 'jeddah',   'distance' => 'Corniche Road', 'star_rating' => '5'],

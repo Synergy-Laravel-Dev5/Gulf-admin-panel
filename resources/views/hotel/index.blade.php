@@ -26,65 +26,43 @@
                 <div class="row">
                     <div class="col-12">
                         <div class="card">
-                            <div class="card-header">
-                                <h5 class="mb-0">Hotels List</h5>
+                            <div class="card-header pb-0 border-bottom-0">
+                                <ul class="nav nav-tabs card-header-tabs" id="hotelCategoryTabs" role="tablist">
+                                    <li class="nav-item" role="presentation">
+                                        <button class="nav-link active" id="makkah-tab" data-bs-toggle="tab" data-bs-target="#makkah" type="button" role="tab" aria-controls="makkah" aria-selected="true">
+                                            Makkah Hotels ({{ $hotels->filter(fn($h) => strtolower($h->city) === 'makkah')->count() }})
+                                        </button>
+                                    </li>
+                                    <li class="nav-item" role="presentation">
+                                        <button class="nav-link" id="madinah-tab" data-bs-toggle="tab" data-bs-target="#madinah" type="button" role="tab" aria-controls="madinah" aria-selected="false">
+                                            Madinah Hotels ({{ $hotels->filter(fn($h) => strtolower($h->city) === 'madinah')->count() }})
+                                        </button>
+                                    </li>
+                                    <li class="nav-item" role="presentation">
+                                        <button class="nav-link" id="other-tab" data-bs-toggle="tab" data-bs-target="#other" type="button" role="tab" aria-controls="other" aria-selected="false">
+                                            Other Countries/Locations Hotels ({{ $hotels->filter(fn($h) => strtolower($h->city) !== 'makkah' && strtolower($h->city) !== 'madinah')->count() }})
+                                        </button>
+                                    </li>
+                                </ul>
                             </div>
                             <div class="card-body">
-                                <div class="table-responsive">
-                                    <table id="datatable" class="table table-bordered dt-responsive nowrap align-middle">
-                                        <thead class="table-light">
-                                            <tr>
-                                                <th>S:NO</th>
-                                                <th>Hotel Name</th>
-                                                <th>City</th>
-                                                <th>Star Rating</th>
-                                                <th>Distance / Location</th>
-                                                <th>Status</th>
-                                                <th>Action</th>
-                                            </tr>
-                                        </thead>
-                                        <tbody>
-                                            @foreach ($hotels as $hotel)
-                                                <tr>
-                                                    <td>{{ $loop->iteration }}</td>
-                                                    <td><strong>{{ $hotel->name }}</strong></td>
-                                                    <td class="text-capitalize"><span class="badge bg-soft-info text-info fs-12">{{ $hotel->city }}</span></td>
-                                                    <td>
-                                                        <span class="text-warning">
-                                                            @for ($i = 0; $i < (int)$hotel->star_rating; $i++)
-                                                                ★
-                                                            @endfor
-                                                        </span>
-                                                        <small class="text-muted">({{ $hotel->star_rating }} Star)</small>
-                                                    </td>
-                                                    <td>{{ $hotel->distance ?? 'N/A' }}</td>
-                                                    <td>
-                                                        @if ($hotel->status == 'active')
-                                                            <span class="badge bg-success">Active</span>
-                                                        @else
-                                                            <span class="badge bg-danger">Inactive</span>
-                                                        @endif
-                                                    </td>
-                                                    <td>
-                                                        <div class="d-flex gap-2">
-                                                            <a href="{{ route('hotel.edit', $hotel->id) }}"
-                                                                class="btn btn-sm btn-outline-primary">
-                                                                <i class="mdi mdi-pencil"></i>
-                                                            </a>
-                                                            <form action="{{ route('hotel.delete', $hotel->id) }}" method="POST">
-                                                                @csrf
-                                                                @method('DELETE')
-                                                                <button class="btn btn-sm btn-outline-danger"
-                                                                    onclick="return confirm('Are you sure you want to delete this hotel?')">
-                                                                    <i class="mdi mdi-delete"></i>
-                                                                </button>
-                                                            </form>
-                                                        </div>
-                                                    </td>
-                                                </tr>
-                                            @endforeach
-                                        </tbody>
-                                    </table>
+                                <div class="tab-content" id="hotelCategoryTabsContent">
+                                    
+                                    <!-- Makkah Hotels Tab -->
+                                    <div class="tab-pane fade show active" id="makkah" role="tabpanel" aria-labelledby="makkah-tab">
+                                        @include('hotel.partials.hotel_table', ['hotelsList' => $hotels->filter(fn($h) => strtolower($h->city) === 'makkah')])
+                                    </div>
+
+                                    <!-- Madinah Hotels Tab -->
+                                    <div class="tab-pane fade" id="madinah" role="tabpanel" aria-labelledby="madinah-tab">
+                                        @include('hotel.partials.hotel_table', ['hotelsList' => $hotels->filter(fn($h) => strtolower($h->city) === 'madinah')])
+                                    </div>
+
+                                    <!-- Other Hotels Tab -->
+                                    <div class="tab-pane fade" id="other" role="tabpanel" aria-labelledby="other-tab">
+                                        @include('hotel.partials.hotel_table', ['hotelsList' => $hotels->filter(fn($h) => strtolower($h->city) !== 'makkah' && strtolower($h->city) !== 'madinah')])
+                                    </div>
+
                                 </div>
                             </div>
                         </div>

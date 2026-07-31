@@ -10,6 +10,7 @@ use App\Http\Controllers\Api\DomesticPackageController;
 use App\Http\Controllers\Api\InternationalPackageController;
 use App\Http\Controllers\Api\PackageBookingController;
 use App\Http\Controllers\Api\HotelController;
+use App\Http\Controllers\Api\HotelBookingController as ApiHotelBookingController;
 use Illuminate\Support\Facades\Route;
 
 
@@ -44,6 +45,7 @@ Route::get('hotels/cities', [HotelController::class, 'cities']);
 Route::get('hotels/{id}', [HotelController::class, 'show']);
 
 Route::post('package-bookings', [PackageBookingController::class, 'store']);
+Route::post('hotel-bookings', [ApiHotelBookingController::class, 'store']);
 
 
 Route::middleware('auth:sanctum')->group(function () {
@@ -66,4 +68,7 @@ Route::middleware('auth:sanctum')->group(function () {
 
     Route::get('package-bookings', [PackageBookingController::class, 'index']);
     Route::get('package-bookings/{id}', [PackageBookingController::class, 'show']);
+
+    Route::get('hotel-bookings', [ApiHotelBookingController::class, 'index']);
+    Route::get('hotel-bookings/{id}', [ApiHotelBookingController::class, 'show']);
 });

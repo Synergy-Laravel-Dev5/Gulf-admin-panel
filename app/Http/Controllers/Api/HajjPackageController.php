@@ -11,13 +11,13 @@ class HajjPackageController extends Controller
     {
         return response()->json([
             'success' => true,
-            'data'    => HajjPackage::where('status', 'active')->latest()->get(),
+            'data'    => HajjPackage::with('transportation')->where('status', 'active')->latest()->get(),
         ]);
     }
 
     public function show($id)
     {
-        $package = HajjPackage::where('status', 'active')->find($id);
+        $package = HajjPackage::with('transportation')->where('status', 'active')->find($id);
 
         if (!$package) {
             return response()->json([

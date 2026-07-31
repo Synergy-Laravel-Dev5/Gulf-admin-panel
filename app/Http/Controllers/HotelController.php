@@ -3,6 +3,7 @@
 namespace App\Http\Controllers;
 
 use App\Models\Hotel;
+use App\Models\City;
 use Illuminate\Http\Request;
 
 class HotelController extends Controller
@@ -15,7 +16,8 @@ class HotelController extends Controller
 
     public function create()
     {
-        return view('hotel.create');
+        $cities = City::where('status', 'active')->get();
+        return view('hotel.create', compact('cities'));
     }
 
     public function store(Request $request)
@@ -37,8 +39,9 @@ class HotelController extends Controller
 
     public function edit($id)
     {
-        $hotel = Hotel::findOrFail($id);
-        return view('hotel.edit', compact('hotel'));
+        $hotel  = Hotel::findOrFail($id);
+        $cities = City::where('status', 'active')->get();
+        return view('hotel.edit', compact('hotel', 'cities'));
     }
 
     public function update(Request $request, $id)

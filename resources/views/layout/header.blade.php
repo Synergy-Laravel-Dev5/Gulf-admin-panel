@@ -159,6 +159,27 @@
                     </a>
                 </li>
 
+                <li>
+                    <a class="tp-link" href="{{ route('meal-type.index') }}">
+                        <i data-feather="coffee"></i>
+                        <span>Meal Types</span>
+                    </a>
+                </li>
+
+                <li>
+                    <a class="tp-link" href="{{ route('city.index') }}">
+                        <i data-feather="map-pin"></i>
+                        <span>Cities</span>
+                    </a>
+                </li>
+
+                <li>
+                    <a class="tp-link" href="{{ route('hotel-booking.index') }}">
+                        <i data-feather="calendar"></i>
+                        <span>Hotel Bookings</span>
+                    </a>
+                </li>
+
 
             </ul>
         </div>

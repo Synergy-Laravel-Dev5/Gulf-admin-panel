@@ -10,6 +10,10 @@ class HajjPackage extends Model
     use SoftDeletes;
     protected $guarded = [];
 
+    protected $casts = [
+        'requirements' => 'array',
+    ];
+
     public function getTypeAttribute()
     {
         return 'hajj';

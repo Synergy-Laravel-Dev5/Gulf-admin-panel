@@ -12,6 +12,9 @@ use App\Http\Controllers\DomesticPackageController;
 use App\Http\Controllers\InternationalPackageController;
 use App\Http\Controllers\PackageBookingController;
 use App\Http\Controllers\VisaCountryController;
+use App\Http\Controllers\MealTypeController;
+use App\Http\Controllers\CityController;
+use App\Http\Controllers\HotelBookingController;
 use Illuminate\Support\Facades\Mail;
 
 
@@ -128,6 +131,41 @@ Route::middleware('auth')->group(function () {
                 Route::get('/edit/{id}', 'edit')->name('hotel.edit');
                 Route::put('/update/{id}', 'update')->name('hotel.update');
                 Route::delete('/delete/{id}', 'destroy')->name('hotel.delete');
+            });
+
+        Route::controller(MealTypeController::class)
+            ->prefix('meal-type')
+            ->group(function () {
+                Route::get('/', 'index')->name('meal-type.index');
+                Route::get('/create', 'create')->name('meal-type.create');
+                Route::post('/store', 'store')->name('meal-type.store');
+                Route::get('/edit/{id}', 'edit')->name('meal-type.edit');
+                Route::put('/update/{id}', 'update')->name('meal-type.update');
+                Route::delete('/delete/{id}', 'destroy')->name('meal-type.delete');
+                Route::get('/trash', 'trash')->name('meal-type.trash');
+                Route::get('/restore/{id}', 'restore')->name('meal-type.restore');
+            });
+
+        Route::controller(CityController::class)
+            ->prefix('city')
+            ->group(function () {
+                Route::get('/', 'index')->name('city.index');
+                Route::get('/create', 'create')->name('city.create');
+                Route::post('/store', 'store')->name('city.store');
+                Route::get('/edit/{id}', 'edit')->name('city.edit');
+                Route::put('/update/{id}', 'update')->name('city.update');
+                Route::delete('/delete/{id}', 'destroy')->name('city.delete');
+                Route::get('/trash', 'trash')->name('city.trash');
+                Route::get('/restore/{id}', 'restore')->name('city.restore');
+            });
+
+        Route::controller(HotelBookingController::class)
+            ->prefix('hotel-booking')
+            ->group(function () {
+                Route::get('/', 'index')->name('hotel-booking.index');
+                Route::get('/show/{id}', 'show')->name('hotel-booking.show');
+                Route::put('/update-status/{id}', 'updateStatus')->name('hotel-booking.update-status');
+                Route::delete('/delete/{id}', 'destroy')->name('hotel-booking.delete');
             });
     });
 });
