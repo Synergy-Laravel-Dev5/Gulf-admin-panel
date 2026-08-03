@@ -54,22 +54,25 @@ class UmrahPackageController extends Controller
     }
 
    
-    public function show(UmrahPackage $umrahPackage)
+    public function show($id)
     {
+        $umrahPackage = UmrahPackage::findOrFail($id);
         return view('umrah_package.show', compact('umrahPackage'));
     }
 
-  
-    public function edit(UmrahPackage $umrahPackage)
+    public function edit($id)
     {
-        $makkahHotels  = Hotel::where('city', 'makkah')->where('status', 'active')->get();
-        $madinahHotels = Hotel::where('city', 'madinah')->where('status', 'active')->get();
+        $umrahPackage = UmrahPackage::findOrFail($id);
+        $makkahHotels  = Hotel::whereRaw('LOWER(city) = ?', ['makkah'])->where('status', 'active')->get();
+        $madinahHotels = Hotel::whereRaw('LOWER(city) = ?', ['madinah'])->where('status', 'active')->get();
 
         return view('umrah_package.edit', compact('umrahPackage', 'makkahHotels', 'madinahHotels'));
     }
 
-    public function update(Request $request, UmrahPackage $umrahPackage)
+    public function update(Request $request, $id)
     {
+        $umrahPackage = UmrahPackage::findOrFail($id);
+
         $data = $request->validate([
             'title'                  => 'required|string|max:255',
             'subtitle'               => 'nullable|string|max:255',
@@ -98,9 +101,9 @@ class UmrahPackageController extends Controller
         return redirect()->route('umrah-package.index')->with('success', 'Umrah package updated successfully.');
     }
 
-
-    public function destroy(UmrahPackage $umrahPackage)
+    public function destroy($id)
     {
+        $umrahPackage = UmrahPackage::findOrFail($id);
         $umrahPackage->delete();
 
         return back()->with('success', 'Package moved to trash.');
