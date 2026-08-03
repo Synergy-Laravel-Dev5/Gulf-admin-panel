@@ -5,6 +5,7 @@ namespace App\Http\Controllers;
 use App\Models\HajjPackage;
 use App\Models\Hotel;
 use App\Models\MealType;
+use App\Models\TransportationRoute;
 use Illuminate\Http\Request;
 
 class HajjPackageController extends Controller
@@ -17,12 +18,13 @@ class HajjPackageController extends Controller
 
     public function create()
     {
-        $makkahHotels  = Hotel::whereRaw('LOWER(city) = ?', ['makkah'])->where('status', 'active')->get();
-        $madinahHotels = Hotel::whereRaw('LOWER(city) = ?', ['madinah'])->where('status', 'active')->get();
-        $aziziaHotels  = Hotel::whereRaw('LOWER(city) = ?', ['azizia'])->where('status', 'active')->get();
-        $mealTypes     = MealType::where('status', 'active')->get();
+        $makkahHotels         = Hotel::whereRaw('LOWER(city) = ?', ['makkah'])->where('status', 'active')->get();
+        $madinahHotels        = Hotel::whereRaw('LOWER(city) = ?', ['madinah'])->where('status', 'active')->get();
+        $aziziaHotels         = Hotel::whereRaw('LOWER(city) = ?', ['azizia'])->where('status', 'active')->get();
+        $mealTypes            = MealType::where('status', 'active')->get();
+        $transportationRoutes = TransportationRoute::where('status', 'active')->get();
 
-        return view('hajj_package.create', compact('makkahHotels', 'madinahHotels', 'aziziaHotels', 'mealTypes'));
+        return view('hajj_package.create', compact('makkahHotels', 'madinahHotels', 'aziziaHotels', 'mealTypes', 'transportationRoutes'));
     }
 
     public function store(Request $request)
@@ -92,13 +94,14 @@ class HajjPackageController extends Controller
 
     public function edit($id)
     {
-        $package       = HajjPackage::findOrFail($id);
-        $makkahHotels  = Hotel::whereRaw('LOWER(city) = ?', ['makkah'])->where('status', 'active')->get();
-        $madinahHotels = Hotel::whereRaw('LOWER(city) = ?', ['madinah'])->where('status', 'active')->get();
-        $aziziaHotels  = Hotel::whereRaw('LOWER(city) = ?', ['azizia'])->where('status', 'active')->get();
-        $mealTypes     = MealType::where('status', 'active')->get();
+        $package              = HajjPackage::findOrFail($id);
+        $makkahHotels         = Hotel::whereRaw('LOWER(city) = ?', ['makkah'])->where('status', 'active')->get();
+        $madinahHotels        = Hotel::whereRaw('LOWER(city) = ?', ['madinah'])->where('status', 'active')->get();
+        $aziziaHotels         = Hotel::whereRaw('LOWER(city) = ?', ['azizia'])->where('status', 'active')->get();
+        $mealTypes            = MealType::where('status', 'active')->get();
+        $transportationRoutes = TransportationRoute::where('status', 'active')->get();
 
-        return view('hajj_package.edit', compact('package', 'makkahHotels', 'madinahHotels', 'aziziaHotels', 'mealTypes'));
+        return view('hajj_package.edit', compact('package', 'makkahHotels', 'madinahHotels', 'aziziaHotels', 'mealTypes', 'transportationRoutes'));
     }
 
     public function update(Request $request, $id)

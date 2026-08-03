@@ -283,12 +283,11 @@
                                             <label class="form-label fw-bold">Route Selection</label>
                                             <select name="transportation_route" id="transportation_route" class="form-select">
                                                 <option value="">Select Transportation Route</option>
-                                                <option value="jeddah_makkah_madinah_jeddah" {{ old('transportation_route', $package->transportation_route) == 'jeddah_makkah_madinah_jeddah' ? 'selected' : '' }}>Jeddah Airport -> Makkah Hotel -> Medina Hotel -> Jeddah Airport</option>
-                                                <option value="jeddah_makkah_madinah_madinah" {{ old('transportation_route', $package->transportation_route) == 'jeddah_makkah_madinah_madinah' ? 'selected' : '' }}>Jeddah Airport -> Makkah Hotel -> Medina Hotel -> Medina Airport</option>
-                                                <option value="madinah_madinah_makkah_jeddah" {{ old('transportation_route', $package->transportation_route) == 'madinah_madinah_makkah_jeddah' ? 'selected' : '' }}>Madinah Airport -> Madinah Hotel -> Makkah Hotel -> Jeddah Airport</option>
-                                                <option value="jeddah_makkah_jeddah" {{ old('transportation_route', $package->transportation_route) == 'jeddah_makkah_jeddah' ? 'selected' : '' }}>Jeddah Airport -> Makkah Hotel -> Jeddah Airport</option>
-                                                <option value="madinah_madinah_makkah_madinah" {{ old('transportation_route', $package->transportation_route) == 'madinah_madinah_makkah_madinah' ? 'selected' : '' }}>Madinah Airport -> Madinah Hotel -> Makkah Hotel -> Medina Airport</option>
-                                                <option value="custom" {{ old('transportation_route', $package->transportation_route) == 'custom' ? 'selected' : '' }}>Custom Route (Show All Route Options)</option>
+                                                @foreach($transportationRoutes as $route)
+                                                    <option value="{{ $route->code }}" {{ old('transportation_route', $package->transportation_route) == $route->code ? 'selected' : '' }}>
+                                                        {{ $route->name }}
+                                                    </option>
+                                                @endforeach
                                             </select>
                                         </div>
 

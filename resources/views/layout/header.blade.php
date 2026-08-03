@@ -180,6 +180,13 @@
                     </a>
                 </li>
 
+                <li>
+                    <a class="tp-link" href="{{ route('transportation-route.index') }}">
+                        <i data-feather="map"></i>
+                        <span>Transportation Routes</span>
+                    </a>
+                </li>
+
 
             </ul>
         </div>

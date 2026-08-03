@@ -15,6 +15,7 @@ use App\Http\Controllers\VisaCountryController;
 use App\Http\Controllers\MealTypeController;
 use App\Http\Controllers\CityController;
 use App\Http\Controllers\HotelBookingController;
+use App\Http\Controllers\TransportationRouteController;
 use Illuminate\Support\Facades\Mail;
 
 
@@ -166,6 +167,19 @@ Route::middleware('auth')->group(function () {
                 Route::get('/show/{id}', 'show')->name('hotel-booking.show');
                 Route::put('/update-status/{id}', 'updateStatus')->name('hotel-booking.update-status');
                 Route::delete('/delete/{id}', 'destroy')->name('hotel-booking.delete');
+            });
+
+        Route::controller(TransportationRouteController::class)
+            ->prefix('transportation-route')
+            ->group(function () {
+                Route::get('/', 'index')->name('transportation-route.index');
+                Route::get('/create', 'create')->name('transportation-route.create');
+                Route::post('/store', 'store')->name('transportation-route.store');
+                Route::get('/edit/{id}', 'edit')->name('transportation-route.edit');
+                Route::put('/update/{id}', 'update')->name('transportation-route.update');
+                Route::delete('/delete/{id}', 'destroy')->name('transportation-route.delete');
+                Route::get('/trash', 'trash')->name('transportation-route.trash');
+                Route::get('/restore/{id}', 'restore')->name('transportation-route.restore');
             });
     });
 });

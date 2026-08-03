@@ -18,6 +18,7 @@ class DatabaseSeeder extends Seeder
             UmrahPackageSeeder::class,
             DomesticPackageSeeder::class,
             InternationalPackageSeeder::class,
+            TransportationRouteSeeder::class,
         ]);
 
         User::firstOrCreate(
