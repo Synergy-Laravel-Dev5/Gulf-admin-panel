@@ -127,9 +127,8 @@
                                         </div>
 
                                         <div class="col-md-12 mb-3">
-                                            <label class="form-label">Key Features <small class="text-muted">(one per
-                                                    line)</small></label>
-                                            <textarea name="features" rows="4" class="form-control">{{ old('features', $umrahPackage->features) }}</textarea>
+                                            <label class="form-label">Key Features</label>
+                                            <textarea name="features" rows="4" class="form-control summernote">{{ old('features', $umrahPackage->features) }}</textarea>
                                         </div>
 
                                         <div class="col-md-12 mb-3">
@@ -140,7 +139,7 @@
 
                                         <div class="col-md-12 mb-3">
                                             <label class="form-label">Description</label>
-                                            <textarea name="description" rows="4" class="form-control">{{ old('description', $umrahPackage->description) }}</textarea>
+                                            <textarea name="description" rows="4" class="form-control summernote">{{ old('description', $umrahPackage->description) }}</textarea>
                                         </div>
 
                                         <div class="col-md-6 mb-3">
@@ -148,7 +147,7 @@
                                             <input type="file" name="image" class="form-control">
                                             @if ($umrahPackage->image)
                                                 <div class="mt-2">
-                                                    <img src="{{ asset('storage/' . $umrahPackage->image) }}"
+                                                    <img src="{{ str_contains($umrahPackage->image, '/') ? asset('storage/' . $umrahPackage->image) : asset('assets/images/packages/umrah/' . $umrahPackage->image) }}"
                                                         width="80" height="80"
                                                         style="object-fit:cover; border-radius:4px;">
                                                 </div>

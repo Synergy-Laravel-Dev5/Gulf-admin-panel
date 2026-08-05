@@ -45,7 +45,10 @@ class UmrahPackageController extends Controller
         ]);
 
         if ($request->hasFile('image')) {
-            $data['image'] = $request->file('image')->store('packages/umrah', 'public');
+            $file = $request->file('image');
+            $filename = time() . '.' . $file->getClientOriginalExtension();
+            $file->move(public_path('assets/images/packages/umrah'), $filename);
+            $data['image'] = $filename;
         }
 
         UmrahPackage::create($data);
@@ -93,7 +96,17 @@ class UmrahPackageController extends Controller
         ]);
 
         if ($request->hasFile('image')) {
-            $data['image'] = $request->file('image')->store('packages/umrah', 'public');
+            if ($umrahPackage->image) {
+                $oldPath = public_path('assets/images/packages/umrah/' . $umrahPackage->image);
+                if (file_exists($oldPath)) {
+                    unlink($oldPath);
+                }
+            }
+
+            $file = $request->file('image');
+            $filename = time() . '.' . $file->getClientOriginalExtension();
+            $file->move(public_path('assets/images/packages/umrah'), $filename);
+            $data['image'] = $filename;
         }
 
         $umrahPackage->update($data);

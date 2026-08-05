@@ -45,7 +45,10 @@ class InternationalPackageController extends Controller
         $data['visa_required'] = $request->boolean('visa_required');
 
         if ($request->hasFile('image')) {
-            $data['image'] = $request->file('image')->store('packages/international', 'public');
+            $file = $request->file('image');
+            $filename = time() . '.' . $file->getClientOriginalExtension();
+            $file->move(public_path('assets/images/packages/international'), $filename);
+            $data['image'] = $filename;
         }
 
         InternationalPackage::create($data);
@@ -87,7 +90,17 @@ class InternationalPackageController extends Controller
         $data['visa_required'] = $request->boolean('visa_required');
 
         if ($request->hasFile('image')) {
-            $data['image'] = $request->file('image')->store('packages/international', 'public');
+            if ($package->image) {
+                $oldPath = public_path('assets/images/packages/international/' . $package->image);
+                if (file_exists($oldPath)) {
+                    unlink($oldPath);
+                }
+            }
+
+            $file = $request->file('image');
+            $filename = time() . '.' . $file->getClientOriginalExtension();
+            $file->move(public_path('assets/images/packages/international'), $filename);
+            $data['image'] = $filename;
         }
 
         $package->update($data);

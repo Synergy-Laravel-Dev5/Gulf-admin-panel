@@ -41,7 +41,10 @@ class DomesticPackageController extends Controller
         ]);
 
         if ($request->hasFile('image')) {
-            $data['image'] = $request->file('image')->store('packages/domestic', 'public');
+            $file = $request->file('image');
+            $filename = time() . '.' . $file->getClientOriginalExtension();
+            $file->move(public_path('assets/images/packages/domestic'), $filename);
+            $data['image'] = $filename;
         }
 
         DomesticPackage::create($data);
@@ -79,7 +82,17 @@ class DomesticPackageController extends Controller
         ]);
 
         if ($request->hasFile('image')) {
-            $data['image'] = $request->file('image')->store('packages/domestic', 'public');
+            if ($package->image) {
+                $oldPath = public_path('assets/images/packages/domestic/' . $package->image);
+                if (file_exists($oldPath)) {
+                    unlink($oldPath);
+                }
+            }
+
+            $file = $request->file('image');
+            $filename = time() . '.' . $file->getClientOriginalExtension();
+            $file->move(public_path('assets/images/packages/domestic'), $filename);
+            $data['image'] = $filename;
         }
 
         $package->update($data);

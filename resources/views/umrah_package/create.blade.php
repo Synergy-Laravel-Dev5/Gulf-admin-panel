@@ -125,9 +125,8 @@
                                         </div>
 
                                         <div class="col-md-12 mb-3">
-                                            <label class="form-label">Key Features <small class="text-muted">(one per
-                                                    line)</small></label>
-                                            <textarea name="features" rows="4" class="form-control">{{ old('features') }}</textarea>
+                                            <label class="form-label">Key Features</label>
+                                            <textarea name="features" rows="4" class="form-control summernote">{{ old('features') }}</textarea>
                                         </div>
 
                                         <div class="col-md-12 mb-3">
@@ -138,7 +137,7 @@
 
                                         <div class="col-md-12 mb-3">
                                             <label class="form-label">Description</label>
-                                            <textarea name="description" rows="4" class="form-control">{{ old('description') }}</textarea>
+                                            <textarea name="description" rows="4" class="form-control summernote">{{ old('description') }}</textarea>
                                         </div>
 
                                         <div class="col-md-6 mb-3">

@@ -394,7 +394,7 @@
                                             <input type="file" name="image" class="form-control">
                                             @if ($package->image)
                                                 <div class="mt-2">
-                                                    <img src="{{ asset('storage/' . $package->image) }}" width="80"
+                                                    <img src="{{ str_contains($package->image, '/') ? asset('storage/' . $package->image) : asset('assets/images/packages/hajj/' . $package->image) }}" width="80"
                                                         height="80" style="object-fit:cover; border-radius:4px;">
                                                 </div>
                                             @endif

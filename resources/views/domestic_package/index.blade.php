@@ -51,7 +51,7 @@
                                                     <td>{{ $loop->iteration }}</td>
                                                     <td>
                                                         @if ($package->image)
-                                                            <img src="{{ asset('storage/' . $package->image) }}"
+                                                            <img src="{{ str_contains($package->image, '/') ? asset('storage/' . $package->image) : asset('assets/images/packages/domestic/' . $package->image) }}"
                                                                 width="50" height="50"
                                                                 style="object-fit:cover; border-radius:4px;">
                                                         @else

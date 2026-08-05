@@ -82,7 +82,10 @@ class HajjPackageController extends Controller
         ]);
 
         if ($request->hasFile('image')) {
-            $data['image'] = $request->file('image')->store('packages/hajj', 'public');
+            $file = $request->file('image');
+            $filename = time() . '.' . $file->getClientOriginalExtension();
+            $file->move(public_path('assets/images/packages/hajj'), $filename);
+            $data['image'] = $filename;
         }
 
         $data['requirements'] = array_values(array_filter($data['requirements'] ?? []));
@@ -161,7 +164,17 @@ class HajjPackageController extends Controller
         ]);
 
         if ($request->hasFile('image')) {
-            $data['image'] = $request->file('image')->store('packages/hajj', 'public');
+            if ($package->image) {
+                $oldPath = public_path('assets/images/packages/hajj/' . $package->image);
+                if (file_exists($oldPath)) {
+                    unlink($oldPath);
+                }
+            }
+
+            $file = $request->file('image');
+            $filename = time() . '.' . $file->getClientOriginalExtension();
+            $file->move(public_path('assets/images/packages/hajj'), $filename);
+            $data['image'] = $filename;
         }
 
         $data['requirements'] = array_values(array_filter($data['requirements'] ?? []));

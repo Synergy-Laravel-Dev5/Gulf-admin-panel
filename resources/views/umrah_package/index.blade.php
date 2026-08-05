@@ -51,10 +51,10 @@
                                                 <tr>
                                                     <td>{{ $loop->iteration }}</td>
                                                     <td>
-                                                        @if ($package->image)
-                                                            <img src="{{ asset('storage/' . $package->image) }}"
-                                                                width="50" height="50"
-                                                                style="object-fit:cover; border-radius:4px;">
+                                                         @if ($package->image)
+                                                             <img src="{{ str_contains($package->image, '/') ? asset('storage/' . $package->image) : asset('assets/images/packages/umrah/' . $package->image) }}"
+                                                                 width="50" height="50"
+                                                                 style="object-fit:cover; border-radius:4px;">
                                                         @else
                                                             N/A
                                                         @endif
