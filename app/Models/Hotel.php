@@ -12,5 +12,6 @@ class Hotel extends Model
         'distance',
         'star_rating',
         'status',
+        'image',
     ];
 }

@@ -28,6 +28,9 @@ class HotelController extends Controller
         }
 
         $hotels = $query->latest()->get();
+        foreach ($hotels as $hotel) {
+            $hotel->image = $hotel->image ? asset('assets/images/hotels/' . $hotel->image) : null;
+        }
 
         return response()->json([
             'success' => true,
@@ -66,6 +69,8 @@ class HotelController extends Controller
                 'message' => 'Hotel not found.',
             ], 404);
         }
+
+        $hotel->image = $hotel->image ? asset('assets/images/hotels/' . $hotel->image) : null;
 
         return response()->json([
             'success' => true,

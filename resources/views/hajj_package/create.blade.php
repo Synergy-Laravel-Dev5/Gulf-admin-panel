@@ -232,6 +232,7 @@
                                         <div class="col-md-4 mb-3">
                                             <label class="form-label">Airline Ticket</label>
                                             <select name="airline_ticket" class="form-select">
+                                                <option value="Not Included" {{ old('airline_ticket', 'Not Included') == 'Not Included' ? 'selected' : '' }}>Not Included</option>
                                                 <option value="Direct Airline" {{ old('airline_ticket') == 'Direct Airline' ? 'selected' : '' }}>Direct Airline</option>
                                                 <option value="Indirect Airline" {{ old('airline_ticket') == 'Indirect Airline' ? 'selected' : '' }}>Indirect Airline</option>
                                             </select>

@@ -3,6 +3,7 @@
         <thead class="table-light">
             <tr>
                 <th>S:NO</th>
+                <th>Image</th>
                 <th>Hotel Name</th>
                 <th>City</th>
                 <th>Star Rating</th>
@@ -15,6 +16,13 @@
             @forelse ($hotelsList as $hotel)
                 <tr>
                     <td>{{ $loop->iteration }}</td>
+                    <td>
+                        @if ($hotel->image)
+                            <img src="{{ asset('assets/images/hotels/' . $hotel->image) }}" width="50" height="50" style="object-fit:cover; border-radius:4px;">
+                        @else
+                            <span class="text-muted">No Image</span>
+                        @endif
+                    </td>
                     <td><strong>{{ $hotel->name }}</strong></td>
                     <td class="text-capitalize"><span class="badge bg-soft-info text-info fs-12">{{ $hotel->city }}</span></td>
                     <td>
@@ -52,7 +60,7 @@
                 </tr>
             @empty
                 <tr>
-                    <td colspan="7" class="text-center text-muted">No hotels found in this category.</td>
+                    <td colspan="8" class="text-center text-muted">No hotels found in this category.</td>
                 </tr>
             @endforelse
         </tbody>

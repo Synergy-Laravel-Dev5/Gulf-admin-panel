@@ -29,7 +29,7 @@
                                     </div>
                                 @endif
 
-                                <form action="{{ route('hotel.store') }}" method="POST">
+                                <form action="{{ route('hotel.store') }}" method="POST" enctype="multipart/form-data">
                                     @csrf
 
                                     <div class="row">
@@ -74,6 +74,11 @@
                                                 <option value="active" {{ old('status') == 'active' ? 'selected' : '' }}>Active</option>
                                                 <option value="inactive" {{ old('status') == 'inactive' ? 'selected' : '' }}>Inactive</option>
                                             </select>
+                                        </div>
+
+                                        <div class="col-md-6 mb-3">
+                                            <label class="form-label">Hotel Image</label>
+                                            <input type="file" name="image" class="form-control">
                                         </div>
                                     </div>
 

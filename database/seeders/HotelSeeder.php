@@ -54,10 +54,20 @@ class HotelSeeder extends Seeder
         ];
 
         foreach ($hotels as $hotel) {
+            $cityImage = strtolower($hotel['city']) . '.jpg';
             Hotel::firstOrCreate(
                 ['name' => $hotel['name'], 'city' => $hotel['city']],
-                array_merge($hotel, ['status' => 'active'])
+                array_merge($hotel, ['status' => 'active', 'image' => $cityImage])
             );
+        }
+
+        $existingHotels = Hotel::all();
+        foreach ($existingHotels as $eh) {
+            $cityImage = strtolower($eh->city) . '.jpg';
+            if (!file_exists(public_path('assets/images/hotels/' . $cityImage))) {
+                $cityImage = 'default_hotel.jpg';
+            }
+            $eh->update(['image' => $cityImage]);
         }
     }
 }

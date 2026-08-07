@@ -28,9 +28,17 @@ class HotelController extends Controller
             'distance'    => 'nullable|string|max:255',
             'star_rating' => 'required|in:1,2,3,4,5',
             'status'      => 'required|in:active,inactive',
+            'image'       => 'nullable|image|mimes:jpg,jpeg,png,webp|max:2048',
         ]);
 
         $data['city'] = strtolower(trim($data['city']));
+
+        if ($request->hasFile('image')) {
+            $file = $request->file('image');
+            $filename = time() . '.' . $file->getClientOriginalExtension();
+            $file->move(public_path('assets/images/hotels'), $filename);
+            $data['image'] = $filename;
+        }
 
         Hotel::create($data);
 
@@ -54,9 +62,24 @@ class HotelController extends Controller
             'distance'    => 'nullable|string|max:255',
             'star_rating' => 'required|in:1,2,3,4,5',
             'status'      => 'required|in:active,inactive',
+            'image'       => 'nullable|image|mimes:jpg,jpeg,png,webp|max:2048',
         ]);
 
         $data['city'] = strtolower(trim($data['city']));
+
+        if ($request->hasFile('image')) {
+            if ($hotel->image) {
+                $oldPath = public_path('assets/images/hotels/' . $hotel->image);
+                if (file_exists($oldPath)) {
+                    unlink($oldPath);
+                }
+            }
+
+            $file = $request->file('image');
+            $filename = time() . '.' . $file->getClientOriginalExtension();
+            $file->move(public_path('assets/images/hotels'), $filename);
+            $data['image'] = $filename;
+        }
 
         $hotel->update($data);
 

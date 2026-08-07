@@ -33,6 +33,14 @@
                                         <td>{{ $booking->guest_name }}</td>
                                     </tr>
                                     <tr>
+                                        <th>Contact No:</th>
+                                        <td>{{ $booking->contact_no ?? 'N/A' }}</td>
+                                    </tr>
+                                    <tr>
+                                        <th>Email:</th>
+                                        <td>{{ $booking->email ?? 'N/A' }}</td>
+                                    </tr>
+                                    <tr>
                                         <th>Hotel Name:</th>
                                         <td>{{ $booking->hotel_name }}</td>
                                     </tr>
@@ -74,6 +82,16 @@
                                             <td>
                                                 <a href="{{ asset('storage/' . $booking->documents_upload) }}" target="_blank" class="btn btn-sm btn-outline-primary">
                                                     <i class="mdi mdi-download"></i> View / Download Document
+                                                </a>
+                                            </td>
+                                        </tr>
+                                    @endif
+                                    @if ($booking->payment_proof)
+                                        <tr>
+                                            <th>Payment Proof:</th>
+                                            <td>
+                                                <a href="{{ asset('storage/' . $booking->payment_proof) }}" target="_blank" class="btn btn-sm btn-outline-success">
+                                                    <i class="mdi mdi-download"></i> View / Download Payment Proof
                                                 </a>
                                             </td>
                                         </tr>

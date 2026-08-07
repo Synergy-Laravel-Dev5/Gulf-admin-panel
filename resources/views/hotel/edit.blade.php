@@ -29,7 +29,7 @@
                                     </div>
                                 @endif
 
-                                <form action="{{ route('hotel.update', $hotel->id) }}" method="POST">
+                                <form action="{{ route('hotel.update', $hotel->id) }}" method="POST" enctype="multipart/form-data">
                                     @csrf
                                     @method('PUT')
 
@@ -75,6 +75,16 @@
                                                 <option value="active" {{ old('status', $hotel->status) == 'active' ? 'selected' : '' }}>Active</option>
                                                 <option value="inactive" {{ old('status', $hotel->status) == 'inactive' ? 'selected' : '' }}>Inactive</option>
                                             </select>
+                                        </div>
+
+                                        <div class="col-md-6 mb-3">
+                                            <label class="form-label">Hotel Image</label>
+                                            <input type="file" name="image" class="form-control">
+                                            @if ($hotel->image)
+                                                <div class="mt-2">
+                                                    <img src="{{ asset('assets/images/hotels/' . $hotel->image) }}" width="80" height="80" style="object-fit:cover; border-radius:4px;">
+                                                </div>
+                                            @endif
                                         </div>
                                     </div>
 
