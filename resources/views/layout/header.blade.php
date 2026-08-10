@@ -187,6 +187,14 @@
                     </a>
                 </li>
 
+                <li>
+                    <a class="tp-link" href="{{ route('tutorial.index') }}">
+                        <i data-feather="video"></i>
+                        <span>Tutorials</span>
+                    </a>
+                </li>
+
+
 
             </ul>
         </div>

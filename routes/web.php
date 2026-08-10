@@ -41,7 +41,9 @@ Route::middleware('auth')->group(function () {
                 Route::get('/', 'index')->name('user.index');
                 Route::get('/create', 'create')->name('user.create');
                 Route::post('/store', 'store')->name('user.store');
+                Route::get('/show/{id}', 'show')->name('user.show');
                 Route::get('/edit/{id}', 'edit')->name('user.edit');
+
                 Route::put('/update/{id}', 'update')->name('user.update');
                 Route::delete('/delete/{id}', 'destroy')->name('user.delete');
                 Route::get('/trash', 'trash')->name('user.trash');
@@ -181,5 +183,19 @@ Route::middleware('auth')->group(function () {
                 Route::get('/trash', 'trash')->name('transportation-route.trash');
                 Route::get('/restore/{id}', 'restore')->name('transportation-route.restore');
             });
+
+        Route::controller(\App\Http\Controllers\TutorialController::class)
+            ->prefix('tutorial')
+            ->group(function () {
+                Route::get('/', 'index')->name('tutorial.index');
+                Route::get('/create', 'create')->name('tutorial.create');
+                Route::post('/store', 'store')->name('tutorial.store');
+                Route::get('/edit/{id}', 'edit')->name('tutorial.edit');
+                Route::put('/update/{id}', 'update')->name('tutorial.update');
+                Route::delete('/delete/{id}', 'destroy')->name('tutorial.delete');
+                Route::get('/trash', 'trash')->name('tutorial.trash');
+                Route::get('/restore/{id}', 'restore')->name('tutorial.restore');
+            });
     });
 });
+

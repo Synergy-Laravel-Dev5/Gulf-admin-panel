@@ -25,7 +25,14 @@ class UserController extends Controller
         return view('user.index', compact('users', 'trashuser'));
     }
 
+    public function show($id)
+    {
+        $user = User::findOrFail($id);
+        return view('user.show', compact('user'));
+    }
+
     public function create()
+
     {
         $this->authorize('user_create');
 
@@ -65,21 +72,28 @@ class UserController extends Controller
 
     public function edit($id)
     {
-        $this->authorize('user_edit');
+        // $this->authorize('user_edit');
 
         $user = User::findOrFail($id);
+        $roles = \Spatie\Permission\Models\Role::all();
 
-        return view('user.edit', compact('user', ''));
+        return view('user.edit', compact('user', 'roles'));
     }
 
     public function update(Request $request, $id)
     {
         $request->validate([
-            'name'     => 'required|string|max:255',
-            'email'    => 'required|email|unique:users,email,' . $id,
-            'status'   => 'required|in:active,inactive',
-            'roles'    => 'required|array',
-            'password' => 'nullable|string|min:3',
+            'name'            => 'required|string|max:255',
+            'email'           => 'required|email|unique:users,email,' . $id,
+            'phone'           => 'nullable|string|max:30',
+            'status'          => 'required|in:active,inactive',
+            'roles'           => 'nullable|array',
+            'password'        => 'nullable|string|min:3',
+            'profile_picture' => 'nullable|file|mimes:jpg,jpeg,png,webp|max:5120',
+            'passport'        => 'nullable|file|mimes:jpg,jpeg,png,pdf|max:10240',
+            'cnic'            => 'nullable|file|mimes:jpg,jpeg,png,pdf|max:10240',
+            'visa'            => 'nullable|file|mimes:jpg,jpeg,png,pdf|max:10240',
+            'ticket'          => 'nullable|file|mimes:jpg,jpeg,png,pdf|max:10240',
         ]);
 
         try {
@@ -87,14 +101,38 @@ class UserController extends Controller
 
             $user->name = $request->name;
             $user->email = $request->email;
+            $user->phone = $request->phone;
             $user->status = $request->status;
 
             if (!empty($request->password)) {
                 $user->password = Hash::make($request->password);
             }
 
+            if ($request->hasFile('profile_picture')) {
+                $user->profile_picture = $request->file('profile_picture')->store('profile_pictures', 'public');
+            }
+
+            if ($request->hasFile('passport')) {
+                $user->passport = $request->file('passport')->store('user_documents/passports', 'public');
+            }
+
+            if ($request->hasFile('cnic')) {
+                $user->cnic = $request->file('cnic')->store('user_documents/cnics', 'public');
+            }
+
+            if ($request->hasFile('visa')) {
+                $user->visa = $request->file('visa')->store('user_documents/visas', 'public');
+            }
+
+            if ($request->hasFile('ticket')) {
+                $user->ticket = $request->file('ticket')->store('user_documents/tickets', 'public');
+            }
+
             $user->save();
-            $user->syncRoles($request->roles);
+            
+            if ($request->has('roles')) {
+                $user->syncRoles($request->roles);
+            }
 
             return redirect()->route('user.index')
                 ->with('success', 'User updated successfully.');
@@ -105,6 +143,7 @@ class UserController extends Controller
                 ->with('error', 'Error updating user: ' . $e->getMessage());
         }
     }
+
 
     public function destroy($id)
     {

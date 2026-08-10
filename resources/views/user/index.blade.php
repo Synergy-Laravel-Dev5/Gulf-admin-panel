@@ -55,9 +55,10 @@
                                         <thead class="table-light">
                                             <tr>
                                                 <th>S:NO</th>
+                                                <th>Profile</th>
                                                 <th>Name</th>
-                                                <th>Email</th>
-                                                {{-- <th>Role</th> --}}
+                                                <th>Email / Phone</th>
+                                                <th>Documents</th>
                                                 <th>Status</th>
                                                 <th>Action</th>
                                             </tr>
@@ -69,22 +70,60 @@
                                                     <td>{{ $loop->iteration }}</td>
 
                                                     <td>
+                                                        @if ($user->profile_picture_url)
+                                                            <img src="{{ $user->profile_picture_url }}" alt="avatar"
+                                                                style="width:40px; height:40px; object-fit:cover;"
+                                                                class="rounded-circle border">
+                                                        @else
+                                                            <div class="bg-primary text-white rounded-circle d-flex align-items-center justify-content-center fw-bold"
+                                                                style="width:40px; height:40px;">
+                                                                {{ strtoupper(substr($user->name ?? 'U', 0, 1)) }}
+                                                            </div>
+                                                        @endif
+                                                    </td>
+
+                                                    <td>
                                                         <strong>{{ $user->name ?? 'N/A' }}</strong>
                                                     </td>
 
-                                                    <td>{{ $user->email ?? 'N/A' }}</td>
-
-                                                    {{-- <td>
-                                                        @if ($user->roles->isNotEmpty())
-                                                            @foreach ($user->roles as $role)
-                                                                <span class="badge bg-primary">
-                                                                    {{ ucfirst($role->name) }}
-                                                                </span>
-                                                            @endforeach
-                                                        @else
-                                                            <span class="text-muted">N/A</span>
+                                                    <td>
+                                                        <div>{{ $user->email ?? 'N/A' }}</div>
+                                                        @if ($user->phone)
+                                                            <small class="text-muted"><i class="mdi mdi-phone me-1"></i>{{ $user->phone }}</small>
                                                         @endif
-                                                    </td> --}}
+                                                    </td>
+
+                                                    <td>
+                                                        <div class="d-flex flex-wrap gap-1">
+                                                            @if ($user->passport_url)
+                                                                <a href="{{ $user->passport_url }}" target="_blank" class="badge bg-success text-decoration-none" title="Passport">
+                                                                    <i class="mdi mdi-file-document-outline"></i> Passport
+                                                                </a>
+                                                            @endif
+
+                                                            @if ($user->cnic_url)
+                                                                <a href="{{ $user->cnic_url }}" target="_blank" class="badge bg-info text-dark text-decoration-none" title="CNIC">
+                                                                    <i class="mdi mdi-card-account-details-outline"></i> CNIC
+                                                                </a>
+                                                            @endif
+
+                                                            @if ($user->visa_url)
+                                                                <a href="{{ $user->visa_url }}" target="_blank" class="badge bg-warning text-dark text-decoration-none" title="Visa">
+                                                                    <i class="mdi mdi-certificate-outline"></i> Visa
+                                                                </a>
+                                                            @endif
+
+                                                            @if ($user->ticket_url)
+                                                                <a href="{{ $user->ticket_url }}" target="_blank" class="badge bg-purple text-decoration-none" style="background-color: #6f42c1; color: white;" title="Ticket">
+                                                                    <i class="mdi mdi-ticket-outline"></i> Ticket
+                                                                </a>
+                                                            @endif
+
+                                                            @if (!$user->passport_url && !$user->cnic_url && !$user->visa_url && !$user->ticket_url)
+                                                                <span class="text-muted fs-12">No Docs</span>
+                                                            @endif
+                                                        </div>
+                                                    </td>
 
                                                     <td>
                                                         @if ($user->status == 'active')
@@ -97,9 +136,14 @@
                                                     <td>
                                                         <div class="d-flex gap-2">
 
+                                                            <a href="{{ route('user.show', $user->id) }}"
+                                                                class="btn btn-sm btn-outline-info" title="View Profile & Uploaded Documents">
+                                                                <i class="mdi mdi-eye"></i> 
+                                                            </a>
+
                                                             {{-- @can('user_edit') --}}
                                                                 <a href="{{ route('user.edit', $user->id) }}"
-                                                                    class="btn btn-sm btn-outline-success">
+                                                                    class="btn btn-sm btn-outline-success" title="Edit User">
                                                                     <i class="mdi mdi-pencil"></i>
                                                                 </a>
                                                             {{-- @endcan --}}
@@ -120,9 +164,11 @@
                                                         </div>
                                                     </td>
 
+
                                                 </tr>
                                             @endforeach
                                         </tbody>
+
 
                                     </table>
                                 </div>

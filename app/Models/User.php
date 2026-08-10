@@ -26,6 +26,12 @@ class User extends Authenticatable
         'password',
         'status',
         'role',
+        'profile_picture',
+        'phone',
+        'passport',
+        'cnic',
+        'visa',
+        'ticket',
     ];
 
     /**
@@ -49,4 +55,45 @@ class User extends Authenticatable
             'password' => 'hashed',
         ];
     }
+
+    /**
+     * Get full URL for profile picture.
+     */
+    public function getProfilePictureUrlAttribute(): ?string
+    {
+        return $this->profile_picture ? asset('storage/' . $this->profile_picture) : null;
+    }
+
+    /**
+     * Get full URL for passport document.
+     */
+    public function getPassportUrlAttribute(): ?string
+    {
+        return $this->passport ? asset('storage/' . $this->passport) : null;
+    }
+
+    /**
+     * Get full URL for cnic document.
+     */
+    public function getCnicUrlAttribute(): ?string
+    {
+        return $this->cnic ? asset('storage/' . $this->cnic) : null;
+    }
+
+    /**
+     * Get full URL for visa document.
+     */
+    public function getVisaUrlAttribute(): ?string
+    {
+        return $this->visa ? asset('storage/' . $this->visa) : null;
+    }
+
+    /**
+     * Get full URL for ticket document.
+     */
+    public function getTicketUrlAttribute(): ?string
+    {
+        return $this->ticket ? asset('storage/' . $this->ticket) : null;
+    }
 }
+

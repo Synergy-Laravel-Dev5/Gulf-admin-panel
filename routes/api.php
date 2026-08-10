@@ -11,6 +11,8 @@ use App\Http\Controllers\Api\InternationalPackageController;
 use App\Http\Controllers\Api\PackageBookingController;
 use App\Http\Controllers\Api\HotelController;
 use App\Http\Controllers\Api\HotelBookingController as ApiHotelBookingController;
+use App\Http\Controllers\Api\ProfileController;
+use App\Http\Controllers\Api\TutorialController;
 use Illuminate\Support\Facades\Route;
 
 
@@ -47,10 +49,20 @@ Route::get('hotels/{id}', [HotelController::class, 'show']);
 Route::post('package-bookings', [PackageBookingController::class, 'store']);
 Route::post('hotel-bookings', [ApiHotelBookingController::class, 'store']);
 
+// Public Tutorial Routes
+Route::get('tutorials', [TutorialController::class, 'index']);
+Route::get('tutorials/{id}', [TutorialController::class, 'show']);
+
 
 Route::middleware('auth:sanctum')->group(function () {
 
     Route::post('/logout', [AuthController::class, 'logout']);
+
+    // User Profile & Document Upload Routes
+    Route::get('profile', [ProfileController::class, 'getProfile']);
+    Route::post('profile', [ProfileController::class, 'updateProfile']);
+    Route::put('profile', [ProfileController::class, 'updateProfile']);
+    Route::post('profile/upload-documents', [ProfileController::class, 'uploadDocuments']);
 
     Route::post('visa-countries', [VisaCountryController::class, 'store']);
     Route::put('visa-countries/{id}', [VisaCountryController::class, 'update']);
@@ -71,4 +83,11 @@ Route::middleware('auth:sanctum')->group(function () {
 
     Route::get('hotel-bookings', [ApiHotelBookingController::class, 'index']);
     Route::get('hotel-bookings/{id}', [ApiHotelBookingController::class, 'show']);
+
+    // Admin Tutorial Routes
+    Route::post('tutorials', [TutorialController::class, 'store']);
+    Route::post('tutorials/{id}', [TutorialController::class, 'update']);
+    Route::put('tutorials/{id}', [TutorialController::class, 'update']);
+    Route::delete('tutorials/{id}', [TutorialController::class, 'destroy']);
 });
+
