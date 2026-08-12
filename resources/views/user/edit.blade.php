@@ -131,18 +131,33 @@
                                             @endif
                                         </div>
 
-                                        <!-- CNIC -->
+                                        <!-- CNIC FRONT -->
                                         <div class="col-md-6 mb-4">
-                                            <label class="form-label fw-bold">CNIC Document</label>
-                                            <input type="file" name="cnic" class="form-control" accept="image/*,.pdf">
-                                            @if ($user->cnic_url)
+                                            <label class="form-label fw-bold">CNIC Front Document</label>
+                                            <input type="file" name="cnic_front" class="form-control" accept="image/*,.pdf">
+                                            @if ($user->cnic_front_url)
                                                 <div class="mt-2">
-                                                    <a href="{{ $user->cnic_url }}" target="_blank" class="btn btn-sm btn-info text-dark">
-                                                        <i class="mdi mdi-card-account-details-outline"></i> View Uploaded CNIC
+                                                    <a href="{{ $user->cnic_front_url }}" target="_blank" class="btn btn-sm btn-info text-dark">
+                                                        <i class="mdi mdi-card-account-details-outline"></i> View Uploaded CNIC Front
                                                     </a>
                                                 </div>
                                             @else
-                                                <small class="text-muted">No CNIC uploaded yet.</small>
+                                                <small class="text-muted">No CNIC Front uploaded yet.</small>
+                                            @endif
+                                        </div>
+
+                                        <!-- CNIC BACK -->
+                                        <div class="col-md-6 mb-4">
+                                            <label class="form-label fw-bold">CNIC Back Document</label>
+                                            <input type="file" name="cnic_back" class="form-control" accept="image/*,.pdf">
+                                            @if ($user->cnic_back_url)
+                                                <div class="mt-2">
+                                                    <a href="{{ $user->cnic_back_url }}" target="_blank" class="btn btn-sm btn-info text-dark">
+                                                        <i class="mdi mdi-card-account-details-outline"></i> View Uploaded CNIC Back
+                                                    </a>
+                                                </div>
+                                            @else
+                                                <small class="text-muted">No CNIC Back uploaded yet.</small>
                                             @endif
                                         </div>
 

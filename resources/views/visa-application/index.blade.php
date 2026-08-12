@@ -33,7 +33,7 @@
                                                 <th>B2B Rate</th>
                                                 <th>Visa Fee</th>
                                                 <th>Status</th>
-                                                {{-- <th>Action</th> --}}
+                                                <th>Action</th>
                                             </tr>
                                         </thead>
                                         <tbody>
@@ -81,14 +81,14 @@
                                                             </span>
                                                         @endif
                                                     </td>
-                                                    {{-- <td>
+                                                    <td>
                                                         <div class="d-flex gap-2">
                                                             <a href="{{ route('visa-application.show', $application->id) }}"
-                                                                class="btn btn-sm btn-outline-primary">
+                                                                class="btn btn-sm btn-outline-primary" title="View Application Details">
                                                                 <i class="mdi mdi-eye"></i>
                                                             </a>
                                                             <a href="{{ route('visa-application.edit', $application->id) }}"
-                                                                class="btn btn-sm btn-outline-success">
+                                                                class="btn btn-sm btn-outline-success" title="Edit Application">
                                                                 <i class="mdi mdi-pencil"></i>
                                                             </a>
                                                             <form
@@ -102,7 +102,7 @@
                                                                 </button>
                                                             </form>
                                                         </div>
-                                                    </td> --}}
+                                                    </td>
                                                 </tr>
                                             @endforeach
                                         </tbody>

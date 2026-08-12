@@ -91,7 +91,8 @@ class UserController extends Controller
             'password'        => 'nullable|string|min:3',
             'profile_picture' => 'nullable|file|mimes:jpg,jpeg,png,webp|max:5120',
             'passport'        => 'nullable|file|mimes:jpg,jpeg,png,pdf|max:10240',
-            'cnic'            => 'nullable|file|mimes:jpg,jpeg,png,pdf|max:10240',
+            'cnic_front'      => 'nullable|file|mimes:jpg,jpeg,png,pdf|max:10240',
+            'cnic_back'       => 'nullable|file|mimes:jpg,jpeg,png,pdf|max:10240',
             'visa'            => 'nullable|file|mimes:jpg,jpeg,png,pdf|max:10240',
             'ticket'          => 'nullable|file|mimes:jpg,jpeg,png,pdf|max:10240',
         ]);
@@ -108,24 +109,51 @@ class UserController extends Controller
                 $user->password = Hash::make($request->password);
             }
 
+            $destinationPath = public_path('uploads/user_documents');
+            if (!file_exists($destinationPath)) {
+                mkdir($destinationPath, 0755, true);
+            }
+
             if ($request->hasFile('profile_picture')) {
-                $user->profile_picture = $request->file('profile_picture')->store('profile_pictures', 'public');
+                $file = $request->file('profile_picture');
+                $filename = time() . '_avatar_' . uniqid() . '.' . $file->getClientOriginalExtension();
+                $file->move($destinationPath, $filename);
+                $user->profile_picture = 'uploads/user_documents/' . $filename;
             }
 
             if ($request->hasFile('passport')) {
-                $user->passport = $request->file('passport')->store('user_documents/passports', 'public');
+                $file = $request->file('passport');
+                $filename = time() . '_passport_' . uniqid() . '.' . $file->getClientOriginalExtension();
+                $file->move($destinationPath, $filename);
+                $user->passport = 'uploads/user_documents/' . $filename;
             }
 
-            if ($request->hasFile('cnic')) {
-                $user->cnic = $request->file('cnic')->store('user_documents/cnics', 'public');
+            if ($request->hasFile('cnic_front')) {
+                $file = $request->file('cnic_front');
+                $filename = time() . '_cnic_front_' . uniqid() . '.' . $file->getClientOriginalExtension();
+                $file->move($destinationPath, $filename);
+                $user->cnic_front = 'uploads/user_documents/' . $filename;
+            }
+
+            if ($request->hasFile('cnic_back')) {
+                $file = $request->file('cnic_back');
+                $filename = time() . '_cnic_back_' . uniqid() . '.' . $file->getClientOriginalExtension();
+                $file->move($destinationPath, $filename);
+                $user->cnic_back = 'uploads/user_documents/' . $filename;
             }
 
             if ($request->hasFile('visa')) {
-                $user->visa = $request->file('visa')->store('user_documents/visas', 'public');
+                $file = $request->file('visa');
+                $filename = time() . '_visa_' . uniqid() . '.' . $file->getClientOriginalExtension();
+                $file->move($destinationPath, $filename);
+                $user->visa = 'uploads/user_documents/' . $filename;
             }
 
             if ($request->hasFile('ticket')) {
-                $user->ticket = $request->file('ticket')->store('user_documents/tickets', 'public');
+                $file = $request->file('ticket');
+                $filename = time() . '_ticket_' . uniqid() . '.' . $file->getClientOriginalExtension();
+                $file->move($destinationPath, $filename);
+                $user->ticket = 'uploads/user_documents/' . $filename;
             }
 
             $user->save();
