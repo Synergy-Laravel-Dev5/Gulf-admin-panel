@@ -76,26 +76,30 @@
                                             @endif
                                         </td>
                                     </tr>
-                                    @if ($booking->documents_upload_url)
-                                        <tr>
-                                            <th>Uploaded Document:</th>
-                                            <td>
+                                    <tr>
+                                        <th>Uploaded Document:</th>
+                                        <td>
+                                            @if ($booking->documents_upload_url)
                                                 <a href="{{ $booking->documents_upload_url }}" target="_blank" class="btn btn-sm btn-outline-primary">
                                                     <i class="mdi mdi-download"></i> View / Download Document
                                                 </a>
-                                            </td>
-                                        </tr>
-                                    @endif
-                                    @if ($booking->payment_proof_url)
-                                        <tr>
-                                            <th>Payment Proof:</th>
-                                            <td>
+                                            @else
+                                                <span class="badge bg-secondary">No Document Uploaded</span>
+                                            @endif
+                                        </td>
+                                    </tr>
+                                    <tr>
+                                        <th>Payment Proof:</th>
+                                        <td>
+                                            @if ($booking->payment_proof_url)
                                                 <a href="{{ $booking->payment_proof_url }}" target="_blank" class="btn btn-sm btn-success">
                                                     <i class="mdi mdi-eye me-1"></i> View / Download Payment Proof
                                                 </a>
-                                            </td>
-                                        </tr>
-                                    @endif
+                                            @else
+                                                <span class="badge bg-secondary">No Payment Proof Uploaded</span>
+                                            @endif
+                                        </td>
+                                    </tr>
                                 </table>
                             </div>
                         </div>

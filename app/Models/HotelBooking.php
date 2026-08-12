@@ -36,6 +36,14 @@ class HotelBooking extends Model
             return $path;
         }
 
+        if (str_starts_with($path, 'uploads/')) {
+            return asset($path);
+        }
+
+        if (str_starts_with($path, 'hotel_bookings/')) {
+            return asset('uploads/' . $path);
+        }
+
         return asset($path);
     }
 

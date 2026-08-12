@@ -13,10 +13,13 @@ use App\Http\Controllers\Api\HotelController;
 use App\Http\Controllers\Api\HotelBookingController as ApiHotelBookingController;
 use App\Http\Controllers\Api\ProfileController;
 use App\Http\Controllers\Api\TutorialController;
+use App\Http\Controllers\Api\PageController;
 use Illuminate\Support\Facades\Route;
 
 
 Route::post('/register', [AuthController::class, 'register']);
+Route::post('/verify-otp', [AuthController::class, 'verifyOtp']);
+Route::post('/resend-otp', [AuthController::class, 'resendOtp']);
 Route::post('/login', [AuthController::class, 'login']);
 Route::post('/forgot-password', [AuthController::class, 'forgotPassword']);
 Route::post('/reset-password', [AuthController::class, 'resetPassword']);
@@ -54,14 +57,15 @@ Route::get('tutorials', [TutorialController::class, 'index']);
 Route::get('tutorials/{id}', [TutorialController::class, 'show']);
 
 // Terms & Conditions and Privacy Policy Routes
-Route::get('terms-and-conditions', [\App\Http\Controllers\Api\PageController::class, 'termsAndConditions']);
-Route::get('privacy-policy', [\App\Http\Controllers\Api\PageController::class, 'privacyPolicy']);
+Route::get('terms-and-conditions', [PageController::class, 'termsAndConditions']);
+Route::get('privacy-policy', [PageController::class, 'privacyPolicy']);
 
 
 
 Route::middleware('auth:sanctum')->group(function () {
 
     Route::post('/logout', [AuthController::class, 'logout']);
+    Route::post('/deactivate-account', [AuthController::class, 'deactivateAccount']);
 
     // User Profile & Document Upload Routes
     Route::get('profile', [ProfileController::class, 'getProfile']);
@@ -95,4 +99,3 @@ Route::middleware('auth:sanctum')->group(function () {
     Route::put('tutorials/{id}', [TutorialController::class, 'update']);
     Route::delete('tutorials/{id}', [TutorialController::class, 'destroy']);
 });
-
