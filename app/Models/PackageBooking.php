@@ -20,6 +20,11 @@ class PackageBooking extends Model
         'next_of_kin_contact',
         'status',
         'notes',
+        'payment_proof',
+    ];
+
+    protected $appends = [
+        'payment_proof_url',
     ];
 
     public function package()
@@ -30,5 +35,18 @@ class PackageBooking extends Model
     public function user()
     {
         return $this->belongsTo(User::class);
+    }
+
+    public function getPaymentProofUrlAttribute(): ?string
+    {
+        if (!$this->payment_proof) {
+            return null;
+        }
+
+        if (str_starts_with($this->payment_proof, 'http://') || str_starts_with($this->payment_proof, 'https://')) {
+            return $this->payment_proof;
+        }
+
+        return asset($this->payment_proof);
     }
 }

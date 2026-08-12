@@ -11,6 +11,11 @@ class HotelBooking extends Model
 
     protected $guarded = [];
 
+    protected $appends = [
+        'payment_proof_url',
+        'documents_upload_url',
+    ];
+
     public function hotel()
     {
         return $this->belongsTo(Hotel::class, 'hotel_id');
@@ -19,5 +24,28 @@ class HotelBooking extends Model
     public function user()
     {
         return $this->belongsTo(User::class, 'user_id');
+    }
+
+    private function getUrl(?string $path): ?string
+    {
+        if (!$path) {
+            return null;
+        }
+
+        if (str_starts_with($path, 'http://') || str_starts_with($path, 'https://')) {
+            return $path;
+        }
+
+        return asset($path);
+    }
+
+    public function getPaymentProofUrlAttribute(): ?string
+    {
+        return $this->getUrl($this->payment_proof);
+    }
+
+    public function getDocumentsUploadUrlAttribute(): ?string
+    {
+        return $this->getUrl($this->documents_upload);
     }
 }

@@ -196,6 +196,16 @@ Route::middleware('auth')->group(function () {
                 Route::get('/trash', 'trash')->name('tutorial.trash');
                 Route::get('/restore/{id}', 'restore')->name('tutorial.restore');
             });
+
+        Route::delete('/hotel-image/{id}', [\App\Http\Controllers\HotelController::class, 'destroyImage'])->name('hotel.image.delete');
+
+        Route::controller(\App\Http\Controllers\PageController::class)->group(function () {
+            Route::get('/terms-and-conditions', 'editTerms')->name('terms.edit');
+            Route::put('/terms-and-conditions', 'updateTerms')->name('terms.update');
+            Route::get('/privacy-policy', 'editPrivacy')->name('privacy.edit');
+            Route::put('/privacy-policy', 'updatePrivacy')->name('privacy.update');
+        });
     });
 });
+
 

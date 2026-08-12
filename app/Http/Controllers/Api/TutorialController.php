@@ -7,7 +7,6 @@ use App\Models\Tutorial;
 use Illuminate\Http\JsonResponse;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Validator;
-use Illuminate\Support\Facades\Storage;
 
 class TutorialController extends Controller
 {
@@ -67,8 +66,8 @@ class TutorialController extends Controller
             'title'       => 'required|string|max:255',
             'description' => 'nullable|string',
             'video_url'   => 'nullable|url|max:500',
-            'video_file'  => 'nullable|file|mimes:mp4,mov,avi,mkv,webm|max:51200',
-            'thumbnail'   => 'nullable|file|mimes:jpg,jpeg,png,webp|max:5120',
+            'video_file'  => 'nullable|file|mimes:mp4,mov,avi,mkv,webm|max:102400',
+            'thumbnail'   => 'nullable|file|mimes:jpg,jpeg,png,webp|max:10240',
             'category'    => 'nullable|string|max:100',
             'status'      => 'nullable|in:active,inactive',
         ]);
@@ -83,12 +82,23 @@ class TutorialController extends Controller
 
         $data = $validator->validated();
 
+        $destinationPath = public_path('uploads/tutorials');
+        if (!file_exists($destinationPath)) {
+            mkdir($destinationPath, 0755, true);
+        }
+
         if ($request->hasFile('thumbnail')) {
-            $data['thumbnail'] = $request->file('thumbnail')->store('tutorials/thumbnails', 'public');
+            $file = $request->file('thumbnail');
+            $filename = time() . '_thumb_' . uniqid() . '.' . $file->getClientOriginalExtension();
+            $file->move($destinationPath, $filename);
+            $data['thumbnail'] = 'uploads/tutorials/' . $filename;
         }
 
         if ($request->hasFile('video_file')) {
-            $data['video_file'] = $request->file('video_file')->store('tutorials/videos', 'public');
+            $file = $request->file('video_file');
+            $filename = time() . '_video_' . uniqid() . '.' . $file->getClientOriginalExtension();
+            $file->move($destinationPath, $filename);
+            $data['video_file'] = 'uploads/tutorials/' . $filename;
         }
 
         $data['status'] = $data['status'] ?? 'active';
@@ -120,8 +130,8 @@ class TutorialController extends Controller
             'title'       => 'nullable|string|max:255',
             'description' => 'nullable|string',
             'video_url'   => 'nullable|url|max:500',
-            'video_file'  => 'nullable|file|mimes:mp4,mov,avi,mkv,webm|max:51200',
-            'thumbnail'   => 'nullable|file|mimes:jpg,jpeg,png,webp|max:5120',
+            'video_file'  => 'nullable|file|mimes:mp4,mov,avi,mkv,webm|max:102400',
+            'thumbnail'   => 'nullable|file|mimes:jpg,jpeg,png,webp|max:10240',
             'category'    => 'nullable|string|max:100',
             'status'      => 'nullable|in:active,inactive',
         ]);
@@ -136,18 +146,23 @@ class TutorialController extends Controller
 
         $data = array_filter($validator->validated(), fn($value) => !is_null($value));
 
+        $destinationPath = public_path('uploads/tutorials');
+        if (!file_exists($destinationPath)) {
+            mkdir($destinationPath, 0755, true);
+        }
+
         if ($request->hasFile('thumbnail')) {
-            if ($tutorial->thumbnail && Storage::disk('public')->exists($tutorial->thumbnail)) {
-                Storage::disk('public')->delete($tutorial->thumbnail);
-            }
-            $data['thumbnail'] = $request->file('thumbnail')->store('tutorials/thumbnails', 'public');
+            $file = $request->file('thumbnail');
+            $filename = time() . '_thumb_' . uniqid() . '.' . $file->getClientOriginalExtension();
+            $file->move($destinationPath, $filename);
+            $data['thumbnail'] = 'uploads/tutorials/' . $filename;
         }
 
         if ($request->hasFile('video_file')) {
-            if ($tutorial->video_file && Storage::disk('public')->exists($tutorial->video_file)) {
-                Storage::disk('public')->delete($tutorial->video_file);
-            }
-            $data['video_file'] = $request->file('video_file')->store('tutorials/videos', 'public');
+            $file = $request->file('video_file');
+            $filename = time() . '_video_' . uniqid() . '.' . $file->getClientOriginalExtension();
+            $file->move($destinationPath, $filename);
+            $data['video_file'] = 'uploads/tutorials/' . $filename;
         }
 
         $tutorial->update($data);

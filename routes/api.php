@@ -53,6 +53,11 @@ Route::post('hotel-bookings', [ApiHotelBookingController::class, 'store']);
 Route::get('tutorials', [TutorialController::class, 'index']);
 Route::get('tutorials/{id}', [TutorialController::class, 'show']);
 
+// Terms & Conditions and Privacy Policy Routes
+Route::get('terms-and-conditions', [\App\Http\Controllers\Api\PageController::class, 'termsAndConditions']);
+Route::get('privacy-policy', [\App\Http\Controllers\Api\PageController::class, 'privacyPolicy']);
+
+
 
 Route::middleware('auth:sanctum')->group(function () {
 

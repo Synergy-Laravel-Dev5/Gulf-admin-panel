@@ -28,6 +28,7 @@ class PackageBookingController extends Controller
             'next_of_kin_name'    => 'nullable|string|max:255',
             'next_of_kin_contact' => 'nullable|string|max:20',
             'notes'               => 'nullable|string',
+            'payment_proof'       => 'nullable|file|mimes:jpg,jpeg,png,pdf,webp|max:10240',
         ]);
 
         $packageType = strtolower($request->package_type ?? '');
@@ -71,6 +72,18 @@ class PackageBookingController extends Controller
 
         $userId = Auth::guard('sanctum')->id() ?? Auth::id();
 
+        $paymentProofPath = null;
+        if ($request->hasFile('payment_proof')) {
+            $destinationPath = public_path('uploads/payment_proofs');
+            if (!file_exists($destinationPath)) {
+                mkdir($destinationPath, 0755, true);
+            }
+            $file = $request->file('payment_proof');
+            $filename = time() . '_pkg_proof_' . uniqid() . '.' . $file->getClientOriginalExtension();
+            $file->move($destinationPath, $filename);
+            $paymentProofPath = 'uploads/payment_proofs/' . $filename;
+        }
+
         $booking = PackageBooking::create([
             'package_id'          => $packageId,
             'package_type'        => $packageType,
@@ -84,6 +97,7 @@ class PackageBookingController extends Controller
             'next_of_kin_name'    => $request->next_of_kin_name,
             'next_of_kin_contact' => $request->next_of_kin_contact,
             'notes'               => $request->notes,
+            'payment_proof'       => $paymentProofPath,
             'status'              => 'pending',
         ]);
 

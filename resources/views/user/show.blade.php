@@ -97,26 +97,48 @@
                                         </div>
                                     </div>
 
-                                    <!-- CNIC -->
+                                    <!-- CNIC FRONT -->
                                     <div class="col-md-6">
                                         <div class="border rounded p-3 text-center h-100 bg-light bg-opacity-50">
                                             <div class="fs-24 text-info mb-2">
                                                 <i class="mdi mdi-card-account-details-outline"></i>
                                             </div>
-                                            <h6 class="fw-bold mb-1">CNIC Document</h6>
-                                            @if ($user->cnic_url)
+                                            <h6 class="fw-bold mb-1">CNIC Front Document</h6>
+                                            @if ($user->cnic_front_url)
                                                 <span class="badge bg-info text-dark mb-3">Uploaded</span>
                                                 <div>
-                                                    <a href="{{ $user->cnic_url }}" target="_blank" class="btn btn-sm btn-outline-info">
-                                                        <i class="mdi mdi-eye me-1"></i> View / Download CNIC
+                                                    <a href="{{ $user->cnic_front_url }}" target="_blank" class="btn btn-sm btn-outline-info">
+                                                        <i class="mdi mdi-eye me-1"></i> View / Download CNIC Front
                                                     </a>
                                                 </div>
                                             @else
                                                 <span class="badge bg-secondary mb-2">Not Uploaded</span>
-                                                <p class="text-muted fs-12 mb-0">User hasn't uploaded CNIC from mobile app yet.</p>
+                                                <p class="text-muted fs-12 mb-0">CNIC front not uploaded yet.</p>
                                             @endif
                                         </div>
                                     </div>
+
+                                    <!-- CNIC BACK -->
+                                    <div class="col-md-6">
+                                        <div class="border rounded p-3 text-center h-100 bg-light bg-opacity-50">
+                                            <div class="fs-24 text-info mb-2">
+                                                <i class="mdi mdi-card-account-details-outline"></i>
+                                            </div>
+                                            <h6 class="fw-bold mb-1">CNIC Back Document</h6>
+                                            @if ($user->cnic_back_url)
+                                                <span class="badge bg-info text-dark mb-3">Uploaded</span>
+                                                <div>
+                                                    <a href="{{ $user->cnic_back_url }}" target="_blank" class="btn btn-sm btn-outline-info">
+                                                        <i class="mdi mdi-eye me-1"></i> View / Download CNIC Back
+                                                    </a>
+                                                </div>
+                                            @else
+                                                <span class="badge bg-secondary mb-2">Not Uploaded</span>
+                                                <p class="text-muted fs-12 mb-0">CNIC back not uploaded yet.</p>
+                                            @endif
+                                        </div>
+                                    </div>
+
 
                                     <!-- VISA -->
                                     <div class="col-md-6">

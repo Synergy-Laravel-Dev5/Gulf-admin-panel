@@ -6,7 +6,6 @@ use App\Http\Controllers\Controller;
 use Illuminate\Http\JsonResponse;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Validator;
-use Illuminate\Support\Facades\Storage;
 
 class ProfileController extends Controller
 {
@@ -32,6 +31,10 @@ class ProfileController extends Controller
                 'passport_url'        => $user->passport_url,
                 'cnic'                => $user->cnic,
                 'cnic_url'            => $user->cnic_url,
+                'cnic_front'          => $user->cnic_front,
+                'cnic_front_url'      => $user->cnic_front_url,
+                'cnic_back'           => $user->cnic_back,
+                'cnic_back_url'       => $user->cnic_back_url,
                 'visa'                => $user->visa,
                 'visa_url'            => $user->visa_url,
                 'ticket'              => $user->ticket,
@@ -43,7 +46,7 @@ class ProfileController extends Controller
     }
 
     /**
-     * Update user profile information and upload documents (Profile Picture, Passport, CNIC, Visa, Ticket).
+     * Update user profile information and upload documents (Profile Picture, Passport, CNIC Front, CNIC Back, Visa, Ticket).
      */
     public function updateProfile(Request $request): JsonResponse
     {
@@ -52,9 +55,11 @@ class ProfileController extends Controller
         $validator = Validator::make($request->all(), [
             'name'            => 'nullable|string|max:255',
             'phone'           => 'nullable|string|max:30',
-            'profile_picture' => 'nullable|file|mimes:jpg,jpeg,png,webp|max:5120',
+            'profile_picture' => 'nullable|file|mimes:jpg,jpeg,png,webp|max:10240',
             'passport'        => 'nullable|file|mimes:jpg,jpeg,png,pdf|max:10240',
             'cnic'            => 'nullable|file|mimes:jpg,jpeg,png,pdf|max:10240',
+            'cnic_front'      => 'nullable|file|mimes:jpg,jpeg,png,pdf|max:10240',
+            'cnic_back'       => 'nullable|file|mimes:jpg,jpeg,png,pdf|max:10240',
             'visa'            => 'nullable|file|mimes:jpg,jpeg,png,pdf|max:10240',
             'ticket'          => 'nullable|file|mimes:jpg,jpeg,png,pdf|max:10240',
         ]);
@@ -75,44 +80,67 @@ class ProfileController extends Controller
             $user->phone = $request->phone;
         }
 
-        // Upload Profile Picture
+        // Direct public upload directory
+        $destinationPath = public_path('uploads/user_documents');
+        if (!file_exists($destinationPath)) {
+            mkdir($destinationPath, 0755, true);
+        }
+
+        // Profile Picture
         if ($request->hasFile('profile_picture')) {
-            if ($user->profile_picture && Storage::disk('public')->exists($user->profile_picture)) {
-                Storage::disk('public')->delete($user->profile_picture);
-            }
-            $user->profile_picture = $request->file('profile_picture')->store('profile_pictures', 'public');
+            $file = $request->file('profile_picture');
+            $filename = time() . '_profile_' . uniqid() . '.' . $file->getClientOriginalExtension();
+            $file->move($destinationPath, $filename);
+            $user->profile_picture = 'uploads/user_documents/' . $filename;
         }
 
-        // Upload Passport Document
+        // Passport Document
         if ($request->hasFile('passport')) {
-            if ($user->passport && Storage::disk('public')->exists($user->passport)) {
-                Storage::disk('public')->delete($user->passport);
-            }
-            $user->passport = $request->file('passport')->store('user_documents/passports', 'public');
+            $file = $request->file('passport');
+            $filename = time() . '_passport_' . uniqid() . '.' . $file->getClientOriginalExtension();
+            $file->move($destinationPath, $filename);
+            $user->passport = 'uploads/user_documents/' . $filename;
         }
 
-        // Upload CNIC Document
-        if ($request->hasFile('cnic')) {
-            if ($user->cnic && Storage::disk('public')->exists($user->cnic)) {
-                Storage::disk('public')->delete($user->cnic);
+        // CNIC / CNIC Front Document
+        if ($request->hasFile('cnic_front')) {
+            $file = $request->file('cnic_front');
+            $filename = time() . '_cnic_front_' . uniqid() . '.' . $file->getClientOriginalExtension();
+            $file->move($destinationPath, $filename);
+            $user->cnic_front = 'uploads/user_documents/' . $filename;
+            if (!$user->cnic) {
+                $user->cnic = 'uploads/user_documents/' . $filename;
             }
-            $user->cnic = $request->file('cnic')->store('user_documents/cnics', 'public');
+        } elseif ($request->hasFile('cnic')) {
+            $file = $request->file('cnic');
+            $filename = time() . '_cnic_' . uniqid() . '.' . $file->getClientOriginalExtension();
+            $file->move($destinationPath, $filename);
+            $user->cnic = 'uploads/user_documents/' . $filename;
+            $user->cnic_front = 'uploads/user_documents/' . $filename;
         }
 
-        // Upload Visa Document
+        // CNIC Back Document
+        if ($request->hasFile('cnic_back')) {
+            $file = $request->file('cnic_back');
+            $filename = time() . '_cnic_back_' . uniqid() . '.' . $file->getClientOriginalExtension();
+            $file->move($destinationPath, $filename);
+            $user->cnic_back = 'uploads/user_documents/' . $filename;
+        }
+
+        // Visa Document
         if ($request->hasFile('visa')) {
-            if ($user->visa && Storage::disk('public')->exists($user->visa)) {
-                Storage::disk('public')->delete($user->visa);
-            }
-            $user->visa = $request->file('visa')->store('user_documents/visas', 'public');
+            $file = $request->file('visa');
+            $filename = time() . '_visa_' . uniqid() . '.' . $file->getClientOriginalExtension();
+            $file->move($destinationPath, $filename);
+            $user->visa = 'uploads/user_documents/' . $filename;
         }
 
-        // Upload Ticket Document
+        // Ticket Document
         if ($request->hasFile('ticket')) {
-            if ($user->ticket && Storage::disk('public')->exists($user->ticket)) {
-                Storage::disk('public')->delete($user->ticket);
-            }
-            $user->ticket = $request->file('ticket')->store('user_documents/tickets', 'public');
+            $file = $request->file('ticket');
+            $filename = time() . '_ticket_' . uniqid() . '.' . $file->getClientOriginalExtension();
+            $file->move($destinationPath, $filename);
+            $user->ticket = 'uploads/user_documents/' . $filename;
         }
 
         $user->save();
@@ -133,6 +161,10 @@ class ProfileController extends Controller
                 'passport_url'        => $user->passport_url,
                 'cnic'                => $user->cnic,
                 'cnic_url'            => $user->cnic_url,
+                'cnic_front'          => $user->cnic_front,
+                'cnic_front_url'      => $user->cnic_front_url,
+                'cnic_back'           => $user->cnic_back,
+                'cnic_back_url'       => $user->cnic_back_url,
                 'visa'                => $user->visa,
                 'visa_url'            => $user->visa_url,
                 'ticket'              => $user->ticket,
@@ -142,7 +174,7 @@ class ProfileController extends Controller
     }
 
     /**
-     * Dedicated document upload endpoint (Passport, CNIC, Visa, Ticket, Profile Picture).
+     * Dedicated document upload endpoint (Passport, CNIC Front, CNIC Back, Visa, Ticket, Profile Picture).
      */
     public function uploadDocuments(Request $request): JsonResponse
     {

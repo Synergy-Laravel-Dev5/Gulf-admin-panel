@@ -76,22 +76,22 @@
                                             @endif
                                         </td>
                                     </tr>
-                                    @if ($booking->documents_upload)
+                                    @if ($booking->documents_upload_url)
                                         <tr>
                                             <th>Uploaded Document:</th>
                                             <td>
-                                                <a href="{{ asset('storage/' . $booking->documents_upload) }}" target="_blank" class="btn btn-sm btn-outline-primary">
+                                                <a href="{{ $booking->documents_upload_url }}" target="_blank" class="btn btn-sm btn-outline-primary">
                                                     <i class="mdi mdi-download"></i> View / Download Document
                                                 </a>
                                             </td>
                                         </tr>
                                     @endif
-                                    @if ($booking->payment_proof)
+                                    @if ($booking->payment_proof_url)
                                         <tr>
                                             <th>Payment Proof:</th>
                                             <td>
-                                                <a href="{{ asset('storage/' . $booking->payment_proof) }}" target="_blank" class="btn btn-sm btn-outline-success">
-                                                    <i class="mdi mdi-download"></i> View / Download Payment Proof
+                                                <a href="{{ $booking->payment_proof_url }}" target="_blank" class="btn btn-sm btn-success">
+                                                    <i class="mdi mdi-eye me-1"></i> View / Download Payment Proof
                                                 </a>
                                             </td>
                                         </tr>

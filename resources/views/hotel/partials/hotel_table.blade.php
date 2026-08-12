@@ -17,10 +17,13 @@
                 <tr>
                     <td>{{ $loop->iteration }}</td>
                     <td>
-                        @if ($hotel->image)
-                            <img src="{{ asset('assets/images/hotels/' . $hotel->image) }}" width="50" height="50" style="object-fit:cover; border-radius:4px;">
+                        @if ($hotel->image_url)
+                            <img src="{{ $hotel->image_url }}" width="50" height="50" style="object-fit:cover; border-radius:4px;" class="border">
                         @else
                             <span class="text-muted">No Image</span>
+                        @endif
+                        @if($hotel->images && $hotel->images->count() > 0)
+                            <br><span class="badge bg-info text-dark fs-10 mt-1">+{{ $hotel->images->count() }} gallery photos</span>
                         @endif
                     </td>
                     <td><strong>{{ $hotel->name }}</strong></td>
@@ -44,7 +47,7 @@
                     <td>
                         <div class="d-flex gap-2">
                             <a href="{{ route('hotel.edit', $hotel->id) }}"
-                                class="btn btn-sm btn-outline-primary">
+                                class="btn btn-sm btn-outline-primary" title="Edit Hotel & Gallery">
                                 <i class="mdi mdi-pencil"></i>
                             </a>
                             <form action="{{ route('hotel.delete', $hotel->id) }}" method="POST">

@@ -61,6 +61,11 @@ class VisaApplicationController extends Controller
         $data = $validator->validated();
 
 
+        $destinationPath = public_path('uploads/visa_documents');
+        if (!file_exists($destinationPath)) {
+            mkdir($destinationPath, 0755, true);
+        }
+
         foreach (
             [
                 'passport_scan',
@@ -71,14 +76,14 @@ class VisaApplicationController extends Controller
                 'other_document'
             ] as $field
         ) {
-
             if ($request->hasFile($field)) {
-
-                $data[$field] = $request
-                    ->file($field)
-                    ->store('visa_documents', 'public');
+                $file = $request->file($field);
+                $filename = time() . '_' . $field . '_' . uniqid() . '.' . $file->getClientOriginalExtension();
+                $file->move($destinationPath, $filename);
+                $data[$field] = 'uploads/visa_documents/' . $filename;
             }
         }
+
 
 
         $data['status'] = 'pending';

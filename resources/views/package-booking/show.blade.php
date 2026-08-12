@@ -62,7 +62,23 @@
                                         <th>Notes</th>
                                         <td>{{ $booking->notes ?? 'N/A' }}</td>
                                     </tr>
+                                    @if ($booking->payment_proof_url)
+                                        <tr>
+                                            <th>Payment Proof</th>
+                                            <td>
+                                                <a href="{{ $booking->payment_proof_url }}" target="_blank" class="btn btn-sm btn-success">
+                                                    <i class="mdi mdi-eye me-1"></i> View / Download Payment Proof
+                                                </a>
+                                            </td>
+                                        </tr>
+                                    @else
+                                        <tr>
+                                            <th>Payment Proof</th>
+                                            <td><span class="badge bg-secondary">No Proof Uploaded</span></td>
+                                        </tr>
+                                    @endif
                                 </table>
+
                             </div>
                         </div>
                     </div>

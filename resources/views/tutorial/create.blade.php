@@ -33,7 +33,7 @@
                                 <h5 class="mb-0">Tutorial Details</h5>
                             </div>
                             <div class="card-body">
-                                <form action="{{ route('tutorial.store') }}" method="POST" enctype="multipart/form-data">
+                                <form id="tutorialForm" action="{{ route('tutorial.store') }}" method="POST" enctype="multipart/form-data">
                                     @csrf
 
                                     <div class="row">
@@ -63,7 +63,7 @@
 
                                         <!-- Video File -->
                                         <div class="col-md-6 mb-3">
-                                            <label class="form-label">Video File Upload (MP4, MOV, AVI - Max 50MB)</label>
+                                            <label class="form-label">Video File Upload (MP4, MOV, AVI - Max 100MB)</label>
                                             <input type="file" name="video_file" class="form-control" accept="video/*">
                                         </div>
 
@@ -84,7 +84,7 @@
                                     </div>
 
                                     <div class="text-end mt-3">
-                                        <button type="submit" class="btn btn-primary px-4">Save Tutorial</button>
+                                        <button type="submit" id="submitBtn" class="btn btn-primary px-4">Save Tutorial</button>
                                     </div>
                                 </form>
                             </div>
@@ -94,4 +94,13 @@
             </div>
         </div>
     </div>
+
+    <script>
+        document.getElementById('tutorialForm').addEventListener('submit', function(e) {
+            var btn = document.getElementById('submitBtn');
+            btn.disabled = true;
+            btn.innerHTML = '<span class="spinner-border spinner-border-sm me-1" role="status" aria-hidden="true"></span> Uploading Video... Please wait';
+        });
+    </script>
+
 @endsection

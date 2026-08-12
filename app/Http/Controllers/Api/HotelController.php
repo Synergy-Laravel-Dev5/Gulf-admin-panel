@@ -13,7 +13,7 @@ class HotelController extends Controller
      */
     public function index(Request $request)
     {
-        $query = Hotel::where('status', 'active');
+        $query = Hotel::with('images')->where('status', 'active');
 
         // Filter by City if provided
         if ($request->filled('city')) {
@@ -28,9 +28,6 @@ class HotelController extends Controller
         }
 
         $hotels = $query->latest()->get();
-        foreach ($hotels as $hotel) {
-            $hotel->image = $hotel->image ? asset('assets/images/hotels/' . $hotel->image) : null;
-        }
 
         return response()->json([
             'success' => true,
@@ -61,7 +58,7 @@ class HotelController extends Controller
      */
     public function show($id)
     {
-        $hotel = Hotel::where('status', 'active')->find($id);
+        $hotel = Hotel::with('images')->where('status', 'active')->find($id);
 
         if (!$hotel) {
             return response()->json([
@@ -69,8 +66,6 @@ class HotelController extends Controller
                 'message' => 'Hotel not found.',
             ], 404);
         }
-
-        $hotel->image = $hotel->image ? asset('assets/images/hotels/' . $hotel->image) : null;
 
         return response()->json([
             'success' => true,

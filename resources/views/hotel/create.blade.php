@@ -39,17 +39,17 @@
                                                 placeholder="e.g. Swissôtel Makkah" value="{{ old('name') }}" required>
                                         </div>
 
-                                         <div class="col-md-6 mb-3">
-                                             <label class="form-label">City <span class="text-danger">*</span></label>
-                                             <select name="city" class="form-select" required>
-                                                 <option value="">Select City</option>
-                                                 @foreach($cities as $city)
-                                                     <option value="{{ $city->name }}" {{ old('city') == $city->name ? 'selected' : '' }}>
-                                                         {{ ucfirst($city->name) }} ({{ $city->country }})
-                                                     </option>
-                                                 @endforeach
-                                             </select>
-                                         </div>
+                                        <div class="col-md-6 mb-3">
+                                            <label class="form-label">City <span class="text-danger">*</span></label>
+                                            <select name="city" class="form-select" required>
+                                                <option value="">Select City</option>
+                                                @foreach($cities as $city)
+                                                    <option value="{{ $city->name }}" {{ old('city') == $city->name ? 'selected' : '' }}>
+                                                        {{ ucfirst($city->name) }} ({{ $city->country }})
+                                                    </option>
+                                                @endforeach
+                                            </select>
+                                        </div>
 
                                         <div class="col-md-6 mb-3">
                                             <label class="form-label">Star Rating <span class="text-danger">*</span></label>
@@ -69,6 +69,16 @@
                                         </div>
 
                                         <div class="col-md-6 mb-3">
+                                            <label class="form-label">Main Cover Image</label>
+                                            <input type="file" name="image" class="form-control" accept="image/*">
+                                        </div>
+
+                                        <div class="col-md-6 mb-3">
+                                            <label class="form-label">Multiple Gallery Images (Select Multiple)</label>
+                                            <input type="file" name="images[]" class="form-control" accept="image/*" multiple>
+                                        </div>
+
+                                        <div class="col-md-6 mb-3">
                                             <label class="form-label">Status <span class="text-danger">*</span></label>
                                             <select name="status" class="form-select" required>
                                                 <option value="active" {{ old('status') == 'active' ? 'selected' : '' }}>Active</option>
@@ -76,9 +86,9 @@
                                             </select>
                                         </div>
 
-                                        <div class="col-md-6 mb-3">
-                                            <label class="form-label">Hotel Image</label>
-                                            <input type="file" name="image" class="form-control">
+                                        <div class="col-12 mb-3">
+                                            <label class="form-label">Hotel Description (Summernote Rich Editor)</label>
+                                            <textarea name="description" class="form-control summernote" rows="6">{{ old('description') }}</textarea>
                                         </div>
                                     </div>
 
@@ -94,3 +104,5 @@
         </div>
     </div>
 @endsection
+
+

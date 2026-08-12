@@ -194,6 +194,21 @@
                     </a>
                 </li>
 
+                <li>
+                    <a class="tp-link" href="{{ route('terms.edit') }}">
+                        <i data-feather="file-text"></i>
+                        <span>Terms & Conditions</span>
+                    </a>
+                </li>
+
+                <li>
+                    <a class="tp-link" href="{{ route('privacy.edit') }}">
+                        <i data-feather="shield"></i>
+                        <span>Privacy Policy</span>
+                    </a>
+                </li>
+
+
 
 
             </ul>

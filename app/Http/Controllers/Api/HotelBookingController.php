@@ -22,8 +22,8 @@ class HotelBookingController extends Controller
             'check_out'        => 'required|date|after:check_in',
             'no_of_rooms'      => 'required|integer|min:1',
             'meal'             => 'required|string|max:255',
-            'documents_upload' => 'nullable|file|mimes:pdf,jpg,jpeg,png,webp|max:5120',
-            'payment_proof'    => 'nullable|file|mimes:pdf,jpg,jpeg,png,webp|max:5120',
+            'documents_upload' => 'nullable|file|mimes:pdf,jpg,jpeg,png,webp|max:10240',
+            'payment_proof'    => 'nullable|file|mimes:pdf,jpg,jpeg,png,webp|max:10240',
         ]);
 
         $hotel = Hotel::find($request->hotel_id);
@@ -51,12 +51,23 @@ class HotelBookingController extends Controller
             'status'      => 'pending',
         ];
 
+        $destinationPath = public_path('uploads/hotel_bookings');
+        if (!file_exists($destinationPath)) {
+            mkdir($destinationPath, 0755, true);
+        }
+
         if ($request->hasFile('documents_upload')) {
-            $data['documents_upload'] = $request->file('documents_upload')->store('hotel_bookings/documents', 'public');
+            $file = $request->file('documents_upload');
+            $filename = time() . '_doc_' . uniqid() . '.' . $file->getClientOriginalExtension();
+            $file->move($destinationPath, $filename);
+            $data['documents_upload'] = 'uploads/hotel_bookings/' . $filename;
         }
 
         if ($request->hasFile('payment_proof')) {
-            $data['payment_proof'] = $request->file('payment_proof')->store('hotel_bookings/payments', 'public');
+            $file = $request->file('payment_proof');
+            $filename = time() . '_proof_' . uniqid() . '.' . $file->getClientOriginalExtension();
+            $file->move($destinationPath, $filename);
+            $data['payment_proof'] = 'uploads/hotel_bookings/' . $filename;
         }
 
         $booking = HotelBooking::create($data);

@@ -30,6 +30,8 @@ class User extends Authenticatable
         'phone',
         'passport',
         'cnic',
+        'cnic_front',
+        'cnic_back',
         'visa',
         'ticket',
     ];
@@ -56,44 +58,55 @@ class User extends Authenticatable
         ];
     }
 
-    /**
-     * Get full URL for profile picture.
-     */
+    private function getUrl(?string $path): ?string
+    {
+        if (!$path) {
+            return null;
+        }
+        if (str_starts_with($path, 'http://') || str_starts_with($path, 'https://')) {
+            return $path;
+        }
+        if (str_starts_with($path, 'storage/')) {
+            return asset($path);
+        }
+        if (str_starts_with($path, 'uploads/')) {
+            return asset($path);
+        }
+        return asset($path);
+    }
+
     public function getProfilePictureUrlAttribute(): ?string
     {
-        return $this->profile_picture ? asset('storage/' . $this->profile_picture) : null;
+        return $this->getUrl($this->profile_picture);
     }
 
-    /**
-     * Get full URL for passport document.
-     */
     public function getPassportUrlAttribute(): ?string
     {
-        return $this->passport ? asset('storage/' . $this->passport) : null;
+        return $this->getUrl($this->passport);
     }
 
-    /**
-     * Get full URL for cnic document.
-     */
     public function getCnicUrlAttribute(): ?string
     {
-        return $this->cnic ? asset('storage/' . $this->cnic) : null;
+        return $this->getUrl($this->cnic);
     }
 
-    /**
-     * Get full URL for visa document.
-     */
+    public function getCnicFrontUrlAttribute(): ?string
+    {
+        return $this->getUrl($this->cnic_front ?? $this->cnic);
+    }
+
+    public function getCnicBackUrlAttribute(): ?string
+    {
+        return $this->getUrl($this->cnic_back);
+    }
+
     public function getVisaUrlAttribute(): ?string
     {
-        return $this->visa ? asset('storage/' . $this->visa) : null;
+        return $this->getUrl($this->visa);
     }
 
-    /**
-     * Get full URL for ticket document.
-     */
     public function getTicketUrlAttribute(): ?string
     {
-        return $this->ticket ? asset('storage/' . $this->ticket) : null;
+        return $this->getUrl($this->ticket);
     }
 }
-

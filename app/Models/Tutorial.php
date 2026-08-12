@@ -25,19 +25,24 @@ class Tutorial extends Model
         'video_file_url',
     ];
 
-    /**
-     * Get full URL for thumbnail.
-     */
-    public function getThumbnailUrlAttribute(): ?string
+    private function formatUrl(?string $path): ?string
     {
-        return $this->thumbnail ? asset('storage/' . $this->thumbnail) : null;
+        if (!$path) {
+            return null;
+        }
+        if (str_starts_with($path, 'http://') || str_starts_with($path, 'https://')) {
+            return $path;
+        }
+        return asset($path);
     }
 
-    /**
-     * Get full URL for uploaded video file.
-     */
+    public function getThumbnailUrlAttribute(): ?string
+    {
+        return $this->formatUrl($this->thumbnail);
+    }
+
     public function getVideoFileUrlAttribute(): ?string
     {
-        return $this->video_file ? asset('storage/' . $this->video_file) : null;
+        return $this->formatUrl($this->video_file);
     }
 }
