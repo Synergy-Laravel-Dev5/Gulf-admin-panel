@@ -67,10 +67,13 @@ class User extends Authenticatable
             return $path;
         }
         if (str_starts_with($path, 'storage/')) {
-            return asset($path);
+            return asset(str_replace('storage/', 'uploads/', $path));
         }
         if (str_starts_with($path, 'uploads/')) {
             return asset($path);
+        }
+        if (str_starts_with($path, 'profile_pictures/') || str_starts_with($path, 'user_documents/')) {
+            return asset('uploads/' . $path);
         }
         return asset($path);
     }

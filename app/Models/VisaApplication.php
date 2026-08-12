@@ -51,7 +51,7 @@ class VisaApplication extends Model
         }
         // If it starts with 'visa_documents/' (legacy storage path)
         if (str_starts_with($path, 'visa_documents/')) {
-            return asset('storage/' . $path);
+            return asset('uploads/' . $path);
         }
         return asset($path);
     }

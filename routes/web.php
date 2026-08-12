@@ -55,8 +55,11 @@ Route::middleware('auth')->group(function () {
             Route::get('/', 'index')->name('visa-application.index');
             Route::get('/show/{id}', 'show')->name('visa-application.show');
             Route::get('/edit/{id}', 'edit')->name('visa-application.edit');
+            Route::put('/update/{id}', 'update')->name('visa-application.update');
             Route::delete('/delete/{id}', 'destroy')->name('visa-application.delete');
             Route::get('/trash', 'trash')->name('visa-application.trash');
+            Route::get('/restore/{id}', 'restore')->name('visa-application.restore');
+            Route::delete('/force-delete/{id}', 'forceDelete')->name('visa-application.forceDelete');
         });
 
 
