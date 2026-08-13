@@ -9,46 +9,48 @@ class DomesticPackageSeeder extends Seeder
 {
     public function run(): void
     {
+        // Truncate existing data first to reload clean data
+        DomesticPackage::truncate();
+
         $packages = [
             [
-                'title'            => 'Hunza Valley Discovery Tour',
-                'subtitle'         => '5 Days Scenic Tour to Karakoram',
+                'title'            => 'Kashmir',
+                'subtitle'         => 'Discover the natural beauty of Kashmir with our carefully curated domestic tour.',
                 'departure_city'   => 'Islamabad',
-                'destination_city' => 'Hunza Valley',
-                'hotel_name'       => 'Serena Altit Fort Residence',
+                'destination_city' => 'Kashmir',
+                'hotel_name'       => 'Kashmir Serena Hotel',
                 'hotel_rating'     => '4 star',
                 'duration_days'    => 5,
-                'price_per_person' => 450.00,
+                'price_per_person' => 45000.00,
                 'travel_date_from' => '2026-09-01',
-                'travel_date_to'   => '2026-09-05',
-                'features'         => '<ul><li>Luxury transport</li><li>Local tourist guide</li><li>Jeep safaris</li></ul>',
-                'requirements'     => ['CNIC copy', 'Warm clothes', 'Comfortable trekking shoes'],
-                'description'      => 'Explore the beautiful Hunza valley, visiting Altit and Baltit forts, Attabad lake, and Karimabad bazaar.',
+                'travel_date_to'   => '2026-09-06',
+                'features'         => 'Luxury transport, Local tourist guide, Jeep safaris, Hotel stays',
+                'requirements'     => 'CNIC copy, Warm clothes',
+                'description'      => 'Discover the natural beauty of Kashmir with our carefully curated domestic tour. From stunning mountain peaks to lush green valleys, experience the best of Pakistan with comfortable stays, expert guides, and unforgettable adventures.',
+                'image'            => 'kashmir.jpg',
                 'status'           => 'active',
             ],
             [
-                'title'            => 'Skardu Valley Adventure',
+                'title'            => 'Skardu',
                 'subtitle'         => '7 Days Tour to Skardu & Deosai Plains',
                 'departure_city'   => 'Islamabad',
                 'destination_city' => 'Skardu',
                 'hotel_name'       => 'Shangrila Resort',
                 'hotel_rating'     => '4 star',
                 'duration_days'    => 7,
-                'price_per_person' => 650.00,
+                'price_per_person' => 65000.00,
                 'travel_date_from' => '2026-09-10',
                 'travel_date_to'   => '2026-09-17',
-                'features'         => '<ul><li>Standard transport</li><li>Hotel stays</li><li>Daily breakfast</li></ul>',
-                'requirements'     => ['CNIC copy', 'Warm clothing'],
+                'features'         => 'Standard transport, Hotel stays, Daily breakfast, Deosai tour',
+                'requirements'     => 'CNIC copy, Warm clothing',
                 'description'      => 'A breathtaking journey to Shangrila, Upper Kachura lake, Cold desert, Shigar fort, and Deosai plains.',
+                'image'            => 'skardu.jpg',
                 'status'           => 'active',
             ]
         ];
 
         foreach ($packages as $pkg) {
-            DomesticPackage::firstOrCreate(
-                ['title' => $pkg['title']],
-                $pkg
-            );
+            DomesticPackage::create($pkg);
         }
     }
 }

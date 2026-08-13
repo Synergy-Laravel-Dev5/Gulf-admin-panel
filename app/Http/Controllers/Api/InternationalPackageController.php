@@ -44,7 +44,8 @@ class InternationalPackageController extends Controller
         if ($package) {
             if ($package->image) {
                 if (str_contains($package->image, '/')) {
-                    $package->image = asset('storage/' . $package->image);
+                    $cleanPath = str_replace('storage/', '', $package->image);
+                    $package->image = asset('uploads/' . $cleanPath);
                 } else {
                     $package->image = asset('assets/images/packages/international/' . $package->image);
                 }

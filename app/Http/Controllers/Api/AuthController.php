@@ -16,19 +16,38 @@ class AuthController extends Controller
     public function register(Request $request)
     {
         $request->validate([
-            'name'     => 'required|string|max:255',
-            'email'    => 'required|email|unique:users,email',
-            'password' => 'required|min:6',
+            'name'         => 'required|string|max:255',
+            'email'        => 'required|email|unique:users,email',
+            'password'     => 'required|min:6',
+            'user_type'    => 'nullable|string|in:client,company',
+            'company_name' => 'required_if:user_type,company|nullable|string|max:255',
+            'logo'         => 'nullable|image|mimes:jpg,jpeg,png,webp|max:5120',
         ]);
 
         $otp = rand(100000, 999999);
+        $userType = $request->user_type ?? 'client';
+        $logoPath = null;
+
+        if ($userType === 'company' && $request->hasFile('logo')) {
+            $destinationPath = public_path('uploads/company_logos');
+            if (!file_exists($destinationPath)) {
+                mkdir($destinationPath, 0755, true);
+            }
+            $file = $request->file('logo');
+            $filename = time() . '_logo_' . uniqid() . '.' . $file->getClientOriginalExtension();
+            $file->move($destinationPath, $filename);
+            $logoPath = 'uploads/company_logos/' . $filename;
+        }
 
         $user = User::create([
-            'name'     => $request->name,
-            'email'    => $request->email,
-            'password' => Hash::make($request->password),
-            'status'   => 'active',
-            'otp_code' => $otp,
+            'name'         => $request->name,
+            'email'        => $request->email,
+            'password'     => Hash::make($request->password),
+            'status'       => 'active',
+            'otp_code'     => $otp,
+            'user_type'    => $userType,
+            'company_name' => $userType === 'company' ? $request->company_name : null,
+            'logo'         => $logoPath,
         ]);
 
         try {
@@ -41,9 +60,12 @@ class AuthController extends Controller
             'status'  => true,
             'message' => 'User Registered Successfully. A 6-digit verification code has been sent to your email.',
             'user'    => [
-                'id'    => $user->id,
-                'name'  => $user->name,
-                'email' => $user->email,
+                'id'           => $user->id,
+                'name'         => $user->name,
+                'email'        => $user->email,
+                'user_type'    => $user->user_type,
+                'company_name' => $user->company_name,
+                'logo_url'     => $user->logo_url,
             ]
         ], 201);
     }
@@ -177,14 +199,28 @@ class AuthController extends Controller
             'email' => 'required|email'
         ]);
 
-        $status = Password::sendResetLink(
-            $request->only('email')
-        );
+        $user = User::where('email', $request->email)->first();
 
+        if (!$user) {
+            return response()->json([
+                'status'  => false,
+                'message' => 'User with this email does not exist.'
+            ], 404);
+        }
+
+        $otp = rand(100000, 999999);
+        $user->otp_code = $otp;
+        $user->save();
+
+        try {
+            Mail::to($user->email)->send(new SendOtpMail($otp));
+        } catch (\Exception $e) {
+            \Illuminate\Support\Facades\Log::error('Forgot Password OTP Mail failed: ' . $e->getMessage());
+        }
 
         return response()->json([
-            'status' => true,
-            'message' => __($status)
+            'status'  => true,
+            'message' => 'A 6-digit verification code has been sent to your email.'
         ]);
     }
 
@@ -192,8 +228,8 @@ class AuthController extends Controller
     public function resetPassword(Request $request)
     {
         $validator = \Illuminate\Support\Facades\Validator::make($request->all(), [
-            'email' => 'required|email',
-            'token' => 'required',
+            'email'    => 'required|email',
+            'code'     => 'required|digits:6',
             'password' => 'required|min:6|confirmed'
         ]);
 
@@ -205,33 +241,25 @@ class AuthController extends Controller
             ], 422);
         }
 
+        $user = User::where('email', $request->email)
+            ->where('otp_code', $request->code)
+            ->first();
 
-        $status = Password::reset(
-            $request->only(
-                'email',
-                'password',
-                'password_confirmation',
-                'token'
-            ),
-            function ($user, $password) {
-
-                $user->forceFill([
-                    'password' => Hash::make($password)
-                ])->save();
-            }
-        );
-
-        if ($status === Password::PASSWORD_RESET) {
+        if (!$user) {
             return response()->json([
-                'status' => true,
-                'message' => __($status)
-            ]);
+                'status'  => false,
+                'message' => 'Invalid email or verification code.'
+            ], 400);
         }
 
+        $user->password = Hash::make($request->password);
+        $user->otp_code = null;
+        $user->save();
+
         return response()->json([
-            'status' => false,
-            'message' => __($status)
-        ], 400);
+            'status'  => true,
+            'message' => 'Your password has been reset successfully.'
+        ]);
     }
 
     public function deactivateAccount(Request $request)
@@ -245,12 +273,9 @@ class AuthController extends Controller
         // Revoke all Sanctum tokens
         $user->tokens()->delete();
 
-        // Soft delete the user account
-        $user->delete();
-
         return response()->json([
             'status'  => true,
-            'message' => 'Account deactivated and deleted successfully.'
+            'message' => 'Account deactivated successfully.'
         ]);
     }
 }

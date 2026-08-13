@@ -103,6 +103,9 @@
                             <li>
                                 <a class="tp-link" href="{{ route('user.index') }}">User</a>
                             </li>
+                            <li>
+                                <a class="tp-link" href="{{ route('company.index') }}">Companies</a>
+                            </li>
                         </ul>
                     </div>
                 </li>

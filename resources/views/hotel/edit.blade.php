@@ -49,7 +49,7 @@
                                             <select name="city" class="form-select" required>
                                                 <option value="">Select City</option>
                                                 @foreach($cities as $city)
-                                                    <option value="{{ $city->name }}" {{ old('city', $hotel->city) == $city->name ? 'selected' : '' }}>
+                                                    <option value="{{ $city->name }}" {{ strtolower(old('city', $hotel->city)) == strtolower($city->name) ? 'selected' : '' }}>
                                                         {{ ucfirst($city->name) }} ({{ $city->country }})
                                                     </option>
                                                 @endforeach

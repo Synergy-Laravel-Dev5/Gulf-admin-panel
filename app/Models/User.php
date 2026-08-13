@@ -35,6 +35,9 @@ class User extends Authenticatable
         'visa',
         'ticket',
         'otp_code',
+        'user_type',
+        'company_name',
+        'logo',
     ];
 
     /**
@@ -112,5 +115,16 @@ class User extends Authenticatable
     public function getTicketUrlAttribute(): ?string
     {
         return $this->getUrl($this->ticket);
+    }
+
+    public function getLogoUrlAttribute(): ?string
+    {
+        if (!$this->logo) {
+            return null;
+        }
+        if (str_starts_with($this->logo, 'http://') || str_starts_with($this->logo, 'https://')) {
+            return $this->logo;
+        }
+        return asset($this->logo);
     }
 }

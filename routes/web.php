@@ -4,6 +4,7 @@ use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\WebsiteController;
 use App\Http\Controllers\AuthController;
 use App\Http\Controllers\UserController;
+use App\Http\Controllers\CompanyController;
 use App\Http\Controllers\VisaApplicationController;
 use App\Http\Controllers\DashboardController;
 use App\Http\Controllers\HajjPackageController;
@@ -56,6 +57,15 @@ Route::middleware('auth')->group(function () {
                 Route::delete('/delete/{id}', 'destroy')->name('user.delete');
                 Route::get('/trash', 'trash')->name('user.trash');
                 Route::get('/restore/{id}', 'restore')->name('user.restore');
+            });
+
+        Route::controller(CompanyController::class)
+            ->prefix('company')
+            ->group(function () {
+                Route::get('/', 'index')->name('company.index');
+                Route::get('/edit/{id}', 'edit')->name('company.edit');
+                Route::put('/update/{id}', 'update')->name('company.update');
+                Route::delete('/delete/{id}', 'destroy')->name('company.delete');
             });
 
 
