@@ -30,6 +30,14 @@ Route::middleware('guest')->group(function () {
     });
 });
 
+Route::get('/reset-password/{token}', function ($token) {
+    return response()->json([
+        'status' => true,
+        'message' => 'Please reset your password in the mobile application using this token.',
+        'token' => $token
+    ]);
+})->name('password.reset');
+
 Route::middleware('auth')->group(function () {
     Route::get('/dashboard', [DashboardController::class, 'index'])->name('dashboard');
     Route::post('/logout', [AuthController::class, 'logout'])->name('logout');

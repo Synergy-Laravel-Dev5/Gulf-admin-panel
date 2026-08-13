@@ -34,7 +34,6 @@ class AuthController extends Controller
         try {
             Mail::to($user->email)->send(new SendOtpMail($otp));
         } catch (\Exception $e) {
-            // Keep going if mail fails locally, but log it
             \Illuminate\Support\Facades\Log::error('OTP Mail dispatch failed: ' . $e->getMessage());
         }
 
@@ -192,11 +191,19 @@ class AuthController extends Controller
 
     public function resetPassword(Request $request)
     {
-        $request->validate([
+        $validator = \Illuminate\Support\Facades\Validator::make($request->all(), [
             'email' => 'required|email',
             'token' => 'required',
             'password' => 'required|min:6|confirmed'
         ]);
+
+        if ($validator->fails()) {
+            return response()->json([
+                'status'  => false,
+                'message' => 'Validation error',
+                'errors'  => $validator->errors()
+            ], 422);
+        }
 
 
         $status = Password::reset(
@@ -214,11 +221,17 @@ class AuthController extends Controller
             }
         );
 
+        if ($status === Password::PASSWORD_RESET) {
+            return response()->json([
+                'status' => true,
+                'message' => __($status)
+            ]);
+        }
 
         return response()->json([
-            'status' => true,
+            'status' => false,
             'message' => __($status)
-        ]);
+        ], 400);
     }
 
     public function deactivateAccount(Request $request)
