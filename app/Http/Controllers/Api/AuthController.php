@@ -18,7 +18,7 @@ class AuthController extends Controller
         $request->validate([
             'name'         => 'required|string|max:255',
             'email'        => 'required|email|unique:users,email',
-            'password'     => 'required|min:6',
+            'password'     => 'required|min:8',
             'user_type'    => 'nullable|string|in:client,company',
             'company_name' => 'required_if:user_type,company|nullable|string|max:255',
             'logo'         => 'nullable|image|mimes:jpg,jpeg,png,webp|max:5120',
@@ -229,7 +229,8 @@ class AuthController extends Controller
     {
         $validator = \Illuminate\Support\Facades\Validator::make($request->all(), [
             'email'    => 'required|email',
-            'code'     => 'required|digits:6',
+            'otp_code' => 'required_without:token|nullable|digits:6',
+            'token'    => 'required_without:otp_code|nullable|string',
             'password' => 'required|min:6|confirmed'
         ]);
 
@@ -241,36 +242,57 @@ class AuthController extends Controller
             ], 422);
         }
 
-        $user = User::where('email', $request->email)
-            ->where('otp_code', $request->code)
-            ->first();
+        if ($request->filled('otp_code')) {
+            $user = User::where('email', $request->email)
+                ->where('otp_code', $request->otp_code)
+                ->first();
 
-        if (!$user) {
+            if (!$user) {
+                return response()->json([
+                    'status'  => false,
+                    'message' => 'Invalid email or verification code.'
+                ], 400);
+            }
+
+            $user->password = Hash::make($request->password);
+            $user->otp_code = null;
+            $user->save();
+
             return response()->json([
-                'status'  => false,
-                'message' => 'Invalid email or verification code.'
-            ], 400);
+                'status'  => true,
+                'message' => 'Your password has been reset successfully.'
+            ]);
         }
 
-        $user->password = Hash::make($request->password);
-        $user->otp_code = null;
-        $user->save();
+        $status = Password::reset(
+            $request->only('email', 'password', 'password_confirmation', 'token'),
+            function ($user, $password) {
+                $user->forceFill([
+                    'password' => Hash::make($password)
+                ])->save();
+            }
+        );
+
+        if ($status === Password::PASSWORD_RESET) {
+            return response()->json([
+                'status' => true,
+                'message' => __($status)
+            ]);
+        }
 
         return response()->json([
-            'status'  => true,
-            'message' => 'Your password has been reset successfully.'
-        ]);
+            'status' => false,
+            'message' => __($status)
+        ], 400);
     }
 
     public function deactivateAccount(Request $request)
     {
         $user = $request->user();
 
-        // Mark user status as inactive
         $user->status = 'inactive';
         $user->save();
 
-        // Revoke all Sanctum tokens
         $user->tokens()->delete();
 
         return response()->json([
