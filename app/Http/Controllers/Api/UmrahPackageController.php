@@ -9,7 +9,12 @@ class UmrahPackageController extends Controller
 {
     public function index()
     {
-        $packages = UmrahPackage::where('status', 'active')->latest()->get();
+        $packages = UmrahPackage::where(function ($q) {
+            $q->whereRaw('LOWER(status) = ?', ['active'])
+              ->orWhereNull('status')
+              ->orWhere('status', '!=', 'inactive');
+        })->latest()->get();
+
         foreach ($packages as $package) {
             $this->formatPackage($package);
         }
@@ -22,7 +27,7 @@ class UmrahPackageController extends Controller
 
     public function show($id)
     {
-        $package = UmrahPackage::where('status', 'active')->find($id);
+        $package = UmrahPackage::find($id);
 
         if (!$package) {
             return response()->json([
@@ -62,10 +67,8 @@ class UmrahPackageController extends Controller
     {
         if (!$text) return '';
         
-        // Replace list items with bullets and newlines
         $text = str_ireplace(['<li>', '</li>'], ["\n• ", "\n"], $text);
         
-        // Convert block/inline-break elements to newlines to prevent words from sticking together
         $text = str_ireplace(
             ['<p>', '</p>', '<br>', '<br />', '</div>', '</td>', '</tr>', '<ul>', '</ul>', '<ol>', '</ol>'], 
             ["\n", "\n", "\n", "\n", "\n", "\n", "\n", "\n", "\n", "\n", "\n"], 
@@ -74,12 +77,10 @@ class UmrahPackageController extends Controller
         
         $text = strip_tags($text);
         
-        // Recursive decode to resolve multiple encodings (e.g. &amp;amp; -> &amp; -> &)
         $text = html_entity_decode($text, ENT_QUOTES, 'UTF-8');
         $text = html_entity_decode($text, ENT_QUOTES, 'UTF-8');
         $text = html_entity_decode($text, ENT_QUOTES, 'UTF-8');
         
-        // Merge duplicate newlines
         $text = preg_replace("/\n+/", "\n", $text);
         
         return trim($text);

@@ -9,7 +9,12 @@ class HajjPackageController extends Controller
 {
     public function index()
     {
-        $packages = HajjPackage::where('status', 'active')->latest()->get();
+        $packages = HajjPackage::where(function ($q) {
+            $q->whereRaw('LOWER(status) = ?', ['active'])
+              ->orWhereNull('status')
+              ->orWhere('status', '!=', 'inactive');
+        })->latest()->get();
+
         foreach ($packages as $package) {
             $this->formatPackage($package);
         }
@@ -22,7 +27,7 @@ class HajjPackageController extends Controller
 
     public function show($id)
     {
-        $package = HajjPackage::where('status', 'active')->find($id);
+        $package = HajjPackage::find($id);
 
         if (!$package) {
             return response()->json([

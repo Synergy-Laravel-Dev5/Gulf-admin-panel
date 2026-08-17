@@ -9,7 +9,12 @@ class DomesticPackageController extends Controller
 {
     public function index()
     {
-        $packages = DomesticPackage::where('status', 'active')->latest()->get();
+        $packages = DomesticPackage::where(function ($q) {
+            $q->whereRaw('LOWER(status) = ?', ['active'])
+              ->orWhereNull('status')
+              ->orWhere('status', '!=', 'inactive');
+        })->latest()->get();
+
         foreach ($packages as $package) {
             $this->formatPackage($package);
         }
@@ -22,7 +27,7 @@ class DomesticPackageController extends Controller
 
     public function show($id)
     {
-        $package = DomesticPackage::where('status', 'active')->find($id);
+        $package = DomesticPackage::find($id);
 
         if (!$package) {
             return response()->json([
