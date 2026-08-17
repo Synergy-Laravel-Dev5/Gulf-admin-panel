@@ -9,11 +9,7 @@ class UmrahPackageController extends Controller
 {
     public function index()
     {
-        $packages = UmrahPackage::where(function ($q) {
-            $q->whereRaw('LOWER(status) = ?', ['active'])
-              ->orWhereNull('status')
-              ->orWhere('status', '!=', 'inactive');
-        })->latest()->get();
+        $packages = UmrahPackage::latest()->get();
 
         foreach ($packages as $package) {
             $this->formatPackage($package);

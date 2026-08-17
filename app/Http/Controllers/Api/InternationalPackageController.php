@@ -9,11 +9,7 @@ class InternationalPackageController extends Controller
 {
     public function index()
     {
-        $packages = InternationalPackage::where(function ($q) {
-            $q->whereRaw('LOWER(status) = ?', ['active'])
-              ->orWhereNull('status')
-              ->orWhere('status', '!=', 'inactive');
-        })->latest()->get();
+        $packages = InternationalPackage::latest()->get();
 
         foreach ($packages as $package) {
             $this->formatPackage($package);

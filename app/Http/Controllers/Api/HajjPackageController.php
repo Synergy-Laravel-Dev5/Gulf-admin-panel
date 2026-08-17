@@ -9,11 +9,7 @@ class HajjPackageController extends Controller
 {
     public function index()
     {
-        $packages = HajjPackage::where(function ($q) {
-            $q->whereRaw('LOWER(status) = ?', ['active'])
-              ->orWhereNull('status')
-              ->orWhere('status', '!=', 'inactive');
-        })->latest()->get();
+        $packages = HajjPackage::latest()->get();
 
         foreach ($packages as $package) {
             $this->formatPackage($package);
