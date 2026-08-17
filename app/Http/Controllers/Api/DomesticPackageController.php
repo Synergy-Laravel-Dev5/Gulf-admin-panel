@@ -54,6 +54,7 @@ class DomesticPackageController extends Controller
             }
             $package->description = $this->cleanHtml($package->description);
             $package->features = $this->cleanHtml($package->features);
+            $package->requirements = $this->cleanHtml($package->requirements);
         }
         return $package;
     }

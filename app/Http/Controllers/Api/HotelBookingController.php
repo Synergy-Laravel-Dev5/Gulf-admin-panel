@@ -13,41 +13,50 @@ class HotelBookingController extends Controller
     public function store(Request $request)
     {
         $request->validate([
-            'hotel_id'         => 'required|integer',
+            'hotel_id'         => 'nullable|integer',
+            'hotel_name'       => 'nullable|string|max:255',
             'guest_name'       => 'required|string|max:255',
             'contact_no'       => 'nullable|string|max:50',
             'email'            => 'nullable|email|max:255',
-            'room_type'        => 'required|in:sharing,double,triple,quad,quint',
-            'check_in'         => 'required|date',
-            'check_out'        => 'required|date|after:check_in',
-            'no_of_rooms'      => 'required|integer|min:1',
-            'meal'             => 'required|string|max:255',
+            'room_type'        => 'nullable|string',
+            'check_in'         => 'nullable|date',
+            'check_out'        => 'nullable|date',
+            'no_of_rooms'      => 'nullable|integer|min:1',
+            'meal'             => 'nullable|string|max:255',
             'documents_upload' => 'nullable|file|mimes:pdf,jpg,jpeg,png,webp|max:10240',
             'payment_proof'    => 'nullable|file|mimes:pdf,jpg,jpeg,png,webp|max:10240',
         ]);
 
-        $hotel = Hotel::find($request->hotel_id);
-        if (!$hotel) {
-            return response()->json([
-                'success' => false,
-                'message' => 'Hotel not found.',
-            ], 404);
+        $hotelId   = $request->hotel_id;
+        $hotelName = $request->hotel_name;
+
+        if (!empty($hotelId)) {
+            $hotel = Hotel::find($hotelId);
+            if ($hotel) {
+                $hotelName = $hotel->name;
+            } else {
+                $hotelId = null;
+            }
+        }
+
+        if (empty($hotelName)) {
+            $hotelName = 'Custom Hotel Request';
         }
 
         $userId = Auth::guard('sanctum')->id() ?? Auth::id();
 
         $data = [
             'user_id'     => $userId,
-            'hotel_id'    => $hotel->id,
-            'hotel_name'  => $hotel->name,
+            'hotel_id'    => $hotelId ?: null,
+            'hotel_name'  => $hotelName,
             'guest_name'  => $request->guest_name,
             'contact_no'  => $request->contact_no,
             'email'       => $request->email,
-            'room_type'   => $request->room_type,
-            'check_in'    => $request->check_in,
-            'check_out'   => $request->check_out,
-            'no_of_rooms' => $request->no_of_rooms,
-            'meal'        => $request->meal,
+            'room_type'   => $request->room_type ?? 'sharing',
+            'check_in'    => $request->check_in ?? now()->format('Y-m-d'),
+            'check_out'   => $request->check_out ?? now()->addDays(1)->format('Y-m-d'),
+            'no_of_rooms' => $request->no_of_rooms ?? 1,
+            'meal'        => $request->meal ?? 'None',
             'status'      => 'pending',
         ];
 

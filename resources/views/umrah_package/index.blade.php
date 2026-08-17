@@ -39,9 +39,10 @@
                                                 <th>Title</th>
                                                 <th>Makkah Hotel</th>
                                                 <th>Madinah Hotel</th>
-                                                <th>Sharing</th>
+                                                 <th>Sharing</th>
                                                 <th>Triple</th>
                                                 <th>Double</th>
+                                                <th>Durations</th>
                                                 <th>Status</th>
                                                 <th>Action</th>
                                             </tr>
@@ -65,6 +66,17 @@
                                                     <td>{{ $package->price_sharing ?? 'N/A' }}</td>
                                                     <td>{{ $package->price_triple ?? 'N/A' }}</td>
                                                     <td>{{ $package->price_double ?? 'N/A' }}</td>
+                                                    <td>
+                                                        @if (!empty($package->durations) && is_array($package->durations))
+                                                            @foreach ($package->durations as $days => $durInfo)
+                                                                @if (!empty($durInfo['enabled']))
+                                                                    <span class="badge bg-soft-info text-info border border-info me-1 mb-1">{{ $days }} Days</span>
+                                                                @endif
+                                                            @endforeach
+                                                        @else
+                                                            <span class="text-muted small">Standard</span>
+                                                        @endif
+                                                    </td>
                                                     <td>
                                                         @if ($package->status == 'active')
                                                             <span class="badge bg-success">Active</span>

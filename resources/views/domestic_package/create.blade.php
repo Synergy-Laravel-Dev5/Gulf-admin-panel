@@ -118,9 +118,8 @@
                                         </div>
 
                                         <div class="col-md-12 mb-3">
-                                            <label class="form-label">Requirements <small class="text-muted">(one per
-                                                    line)</small></label>
-                                            <textarea name="requirements" rows="4" class="form-control">{{ old('requirements') }}</textarea>
+                                            <label class="form-label">Requirements</label>
+                                            <textarea name="requirements" rows="4" class="form-control summernote">{{ old('requirements') }}</textarea>
                                         </div>
 
                                         <div class="col-md-12 mb-3">

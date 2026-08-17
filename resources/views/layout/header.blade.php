@@ -135,7 +135,7 @@
                                     Packages</a>
                             </li>
                             <li>
-                                <a class="tp-link" href="{{ route('package-booking.index') }}">Package Bookings</a>
+                                <a class="tp-link" href="{{ route('package-booking.index') }}">Package Bookings & Requests</a>
                             </li>
                         </ul>
                     </div>

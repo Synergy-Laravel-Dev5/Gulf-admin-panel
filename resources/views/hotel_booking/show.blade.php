@@ -40,10 +40,15 @@
                                         <th>Email:</th>
                                         <td>{{ $booking->email ?? 'N/A' }}</td>
                                     </tr>
-                                    <tr>
-                                        <th>Hotel Name:</th>
-                                        <td>{{ $booking->hotel_name }}</td>
-                                    </tr>
+                                     <tr>
+                                         <th>Hotel Name:</th>
+                                         <td>
+                                             {{ $booking->hotel_name }}
+                                             @if (empty($booking->hotel_id))
+                                                 <span class="badge bg-soft-info text-info border border-info ms-2">Custom Unlisted Hotel Request</span>
+                                             @endif
+                                         </td>
+                                     </tr>
                                     <tr>
                                         <th>Room Type:</th>
                                         <td class="text-capitalize">{{ $booking->room_type }}</td>

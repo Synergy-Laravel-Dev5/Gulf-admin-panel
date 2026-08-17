@@ -124,15 +124,64 @@
                                                 value="{{ old('price_double') }}">
                                         </div>
 
+                                        <div class="col-12 my-3">
+                                            <hr>
+                                            <div class="d-flex align-items-center justify-content-between mb-2">
+                                                <h5 class="fs-16 fw-semibold text-primary m-0"><i class="mdi mdi-clock-outline me-1"></i> Package Duration & Pricing Options <small class="text-muted fs-13">(Optional)</small></h5>
+                                            </div>
+                                            <p class="text-muted fs-13 mb-3">Click on any duration option below to enable it and enter package prices for that specific duration (10, 15, 20, or 28 days).</p>
+                                            
+                                            <div class="row g-3">
+                                                @foreach ([10, 15, 20, 28] as $days)
+                                                    @php
+                                                        $isOldEnabled = old("durations.$days.enabled");
+                                                    @endphp
+                                                    <div class="col-md-6 col-lg-3">
+                                                        <div class="card border {{ $isOldEnabled ? 'border-primary' : 'border-light' }} shadow-sm h-100 duration-card" id="duration_card_{{ $days }}">
+                                                            <div class="card-header bg-light d-flex align-items-center justify-content-between" style="cursor: pointer;" 
+                                                                 onclick="toggleDuration('{{ $days }}')">
+                                                                <span class="fw-bold text-dark fs-14"><i class="mdi mdi-calendar-clock me-1 text-primary"></i> {{ $days }} Days Package</span>
+                                                                <div class="form-check form-switch m-0" onclick="event.stopPropagation();">
+                                                                    <input class="form-check-input duration-toggle" type="checkbox" name="durations[{{ $days }}][enabled]" 
+                                                                           id="duration_switch_{{ $days }}" value="1" 
+                                                                           {{ $isOldEnabled ? 'checked' : '' }} onchange="updateDurationForm('{{ $days }}')">
+                                                                </div>
+                                                            </div>
+                                                            <div class="card-body duration-form-body {{ $isOldEnabled ? '' : 'd-none' }}" id="duration_form_{{ $days }}">
+                                                                <div class="mb-2">
+                                                                    <label class="form-label fs-12 mb-1">Price (Sharing)</label>
+                                                                    <input type="number" step="0.01" name="durations[{{ $days }}][price_sharing]" 
+                                                                           class="form-control form-control-sm" placeholder="e.g. 1500" 
+                                                                           value="{{ old("durations.$days.price_sharing") }}">
+                                                                </div>
+                                                                <div class="mb-2">
+                                                                    <label class="form-label fs-12 mb-1">Price (Triple)</label>
+                                                                    <input type="number" step="0.01" name="durations[{{ $days }}][price_triple]" 
+                                                                           class="form-control form-control-sm" placeholder="e.g. 1800" 
+                                                                           value="{{ old("durations.$days.price_triple") }}">
+                                                                </div>
+                                                                <div class="mb-0">
+                                                                    <label class="form-label fs-12 mb-1">Price (Double)</label>
+                                                                    <input type="number" step="0.01" name="durations[{{ $days }}][price_double]" 
+                                                                           class="form-control form-control-sm" placeholder="e.g. 2200" 
+                                                                           value="{{ old("durations.$days.price_double") }}">
+                                                                </div>
+                                                            </div>
+                                                        </div>
+                                                    </div>
+                                                @endforeach
+                                            </div>
+                                            <hr class="mt-4">
+                                        </div>
+
                                         <div class="col-md-12 mb-3">
                                             <label class="form-label">Key Features</label>
                                             <textarea name="features" rows="4" class="form-control summernote">{{ old('features') }}</textarea>
                                         </div>
 
                                         <div class="col-md-12 mb-3">
-                                            <label class="form-label">Requirements <small class="text-muted">(one per
-                                                    line)</small></label>
-                                            <textarea name="requirements" rows="4" class="form-control">{{ old('requirements') }}</textarea>
+                                            <label class="form-label">Requirements</label>
+                                            <textarea name="requirements" rows="4" class="form-control summernote">{{ old('requirements') }}</textarea>
                                         </div>
 
                                         <div class="col-md-12 mb-3">
@@ -160,21 +209,47 @@
     </div>
 
     <script>
+        function toggleDuration(days) {
+            const switchEl = document.getElementById('duration_switch_' + days);
+            switchEl.checked = !switchEl.checked;
+            updateDurationForm(days);
+        }
+
+        function updateDurationForm(days) {
+            const switchEl = document.getElementById('duration_switch_' + days);
+            const formEl = document.getElementById('duration_form_' + days);
+            const cardEl = document.getElementById('duration_card_' + days);
+            
+            if (switchEl.checked) {
+                formEl.classList.remove('d-none');
+                cardEl.classList.add('border-primary');
+                cardEl.classList.remove('border-light');
+            } else {
+                formEl.classList.add('d-none');
+                cardEl.classList.remove('border-primary');
+                cardEl.classList.add('border-light');
+            }
+        }
+
         document.addEventListener('DOMContentLoaded', function() {
             const makkahSelect = document.querySelector('select[name="makkah_hotel_name"]');
             const makkahDistance = document.getElementById('makkah_hotel_distance');
             const madinahSelect = document.querySelector('select[name="madinah_hotel_name"]');
             const madinahDistance = document.getElementById('madinah_hotel_distance');
 
-            makkahSelect.addEventListener('change', function() {
-                const selected = this.options[this.selectedIndex];
-                makkahDistance.value = selected.getAttribute('data-distance') || '';
-            });
+            if (makkahSelect) {
+                makkahSelect.addEventListener('change', function() {
+                    const selected = this.options[this.selectedIndex];
+                    makkahDistance.value = selected.getAttribute('data-distance') || '';
+                });
+            }
 
-            madinahSelect.addEventListener('change', function() {
-                const selected = this.options[this.selectedIndex];
-                madinahDistance.value = selected.getAttribute('data-distance') || '';
-            });
+            if (madinahSelect) {
+                madinahSelect.addEventListener('change', function() {
+                    const selected = this.options[this.selectedIndex];
+                    madinahDistance.value = selected.getAttribute('data-distance') || '';
+                });
+            }
         });
     </script>
 @endsection

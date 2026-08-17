@@ -21,10 +21,14 @@ class PackageBooking extends Model
         'status',
         'notes',
         'payment_proof',
+        'passport_document',
+        'documents_upload',
     ];
 
     protected $appends = [
         'payment_proof_url',
+        'passport_document_url',
+        'documents_upload_url',
     ];
 
     public function package()
@@ -37,16 +41,31 @@ class PackageBooking extends Model
         return $this->belongsTo(User::class);
     }
 
-    public function getPaymentProofUrlAttribute(): ?string
+    private function getUrl(?string $path): ?string
     {
-        if (!$this->payment_proof) {
+        if (!$path) {
             return null;
         }
 
-        if (str_starts_with($this->payment_proof, 'http://') || str_starts_with($this->payment_proof, 'https://')) {
-            return $this->payment_proof;
+        if (str_starts_with($path, 'http://') || str_starts_with($path, 'https://')) {
+            return $path;
         }
 
-        return asset($this->payment_proof);
+        return asset($path);
+    }
+
+    public function getPaymentProofUrlAttribute(): ?string
+    {
+        return $this->getUrl($this->payment_proof);
+    }
+
+    public function getPassportDocumentUrlAttribute(): ?string
+    {
+        return $this->getUrl($this->passport_document);
+    }
+
+    public function getDocumentsUploadUrlAttribute(): ?string
+    {
+        return $this->getUrl($this->documents_upload);
     }
 }

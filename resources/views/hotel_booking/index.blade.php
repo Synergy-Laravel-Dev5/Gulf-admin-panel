@@ -43,7 +43,12 @@
                                                 <tr>
                                                     <td>{{ $loop->iteration }}</td>
                                                     <td><strong>{{ $booking->guest_name }}</strong></td>
-                                                    <td>{{ $booking->hotel_name }}</td>
+                                                    <td>
+                                                        {{ $booking->hotel_name }}
+                                                        @if (empty($booking->hotel_id))
+                                                            <span class="badge bg-soft-info text-info border border-info ms-1">Custom Request</span>
+                                                        @endif
+                                                    </td>
                                                     <td class="text-capitalize">{{ $booking->room_type }}</td>
                                                     <td>{{ \Carbon\Carbon::parse($booking->check_in)->format('d M Y') }}</td>
                                                     <td>{{ \Carbon\Carbon::parse($booking->check_out)->format('d M Y') }}</td>

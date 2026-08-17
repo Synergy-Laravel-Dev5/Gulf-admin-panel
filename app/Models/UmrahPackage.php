@@ -10,6 +10,10 @@ class UmrahPackage extends Model
     use SoftDeletes;
     protected $guarded = [];
 
+    protected $casts = [
+        'durations' => 'array',
+    ];
+
     public function getTypeAttribute()
     {
         return 'umrah';

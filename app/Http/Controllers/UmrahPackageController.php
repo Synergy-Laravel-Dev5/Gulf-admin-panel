@@ -37,12 +37,33 @@ class UmrahPackageController extends Controller
             'price_sharing'          => 'nullable|numeric',
             'price_triple'           => 'nullable|numeric',
             'price_double'           => 'nullable|numeric',
+            'durations'              => 'nullable|array',
+            'durations.*.enabled'       => 'nullable',
+            'durations.*.price_sharing' => 'nullable|numeric',
+            'durations.*.price_triple'  => 'nullable|numeric',
+            'durations.*.price_double'  => 'nullable|numeric',
             'features'               => 'nullable|string',
             'requirements'           => 'nullable|string',
             'description'            => 'nullable|string',
             'image'                  => 'nullable|image|mimes:jpg,jpeg,png,webp|max:2048',
             'status'                 => 'required|in:active,inactive',
         ]);
+
+        $processedDurations = [];
+        if ($request->has('durations') && is_array($request->durations)) {
+            foreach ($request->durations as $days => $details) {
+                if (!empty($details['enabled']) && ($details['enabled'] == '1' || $details['enabled'] === true || $details['enabled'] == 'on')) {
+                    $processedDurations[$days] = [
+                        'enabled'       => true,
+                        'days'          => (int)$days,
+                        'price_sharing' => isset($details['price_sharing']) && $details['price_sharing'] !== '' ? (float)$details['price_sharing'] : null,
+                        'price_triple'  => isset($details['price_triple']) && $details['price_triple'] !== '' ? (float)$details['price_triple'] : null,
+                        'price_double'  => isset($details['price_double']) && $details['price_double'] !== '' ? (float)$details['price_double'] : null,
+                    ];
+                }
+            }
+        }
+        $data['durations'] = $processedDurations;
 
         if ($request->hasFile('image')) {
             $file = $request->file('image');
@@ -88,12 +109,33 @@ class UmrahPackageController extends Controller
             'price_sharing'          => 'nullable|numeric',
             'price_triple'           => 'nullable|numeric',
             'price_double'           => 'nullable|numeric',
+            'durations'              => 'nullable|array',
+            'durations.*.enabled'       => 'nullable',
+            'durations.*.price_sharing' => 'nullable|numeric',
+            'durations.*.price_triple'  => 'nullable|numeric',
+            'durations.*.price_double'  => 'nullable|numeric',
             'features'               => 'nullable|string',
             'requirements'           => 'nullable|string',
             'description'            => 'nullable|string',
             'image'                  => 'nullable|image|mimes:jpg,jpeg,png,webp|max:2048',
             'status'                 => 'required|in:active,inactive',
         ]);
+
+        $processedDurations = [];
+        if ($request->has('durations') && is_array($request->durations)) {
+            foreach ($request->durations as $days => $details) {
+                if (!empty($details['enabled']) && ($details['enabled'] == '1' || $details['enabled'] === true || $details['enabled'] == 'on')) {
+                    $processedDurations[$days] = [
+                        'enabled'       => true,
+                        'days'          => (int)$days,
+                        'price_sharing' => isset($details['price_sharing']) && $details['price_sharing'] !== '' ? (float)$details['price_sharing'] : null,
+                        'price_triple'  => isset($details['price_triple']) && $details['price_triple'] !== '' ? (float)$details['price_triple'] : null,
+                        'price_double'  => isset($details['price_double']) && $details['price_double'] !== '' ? (float)$details['price_double'] : null,
+                    ];
+                }
+            }
+        }
+        $data['durations'] = $processedDurations;
 
         if ($request->hasFile('image')) {
             if ($umrahPackage->image) {

@@ -62,21 +62,53 @@
                                         <th>Notes</th>
                                         <td>{{ $booking->notes ?? 'N/A' }}</td>
                                     </tr>
-                                    @if ($booking->payment_proof_url)
-                                        <tr>
-                                            <th>Payment Proof</th>
-                                            <td>
-                                                <a href="{{ $booking->payment_proof_url }}" target="_blank" class="btn btn-sm btn-success">
-                                                    <i class="mdi mdi-eye me-1"></i> View / Download Payment Proof
-                                                </a>
-                                            </td>
-                                        </tr>
-                                    @else
-                                        <tr>
-                                            <th>Payment Proof</th>
-                                            <td><span class="badge bg-secondary">No Proof Uploaded</span></td>
-                                        </tr>
-                                    @endif
+                                     @if ($booking->passport_document_url)
+                                         <tr>
+                                             <th>Passport Document</th>
+                                             <td>
+                                                 <a href="{{ $booking->passport_document_url }}" target="_blank" class="btn btn-sm btn-primary">
+                                                     <i class="mdi mdi-passport me-1"></i> View / Download Passport
+                                                 </a>
+                                             </td>
+                                         </tr>
+                                     @else
+                                         <tr>
+                                             <th>Passport Document</th>
+                                             <td><span class="badge bg-secondary">No Passport Uploaded</span></td>
+                                         </tr>
+                                     @endif
+
+                                     @if ($booking->documents_upload_url)
+                                         <tr>
+                                             <th>Required Documents</th>
+                                             <td>
+                                                 <a href="{{ $booking->documents_upload_url }}" target="_blank" class="btn btn-sm btn-info text-white">
+                                                     <i class="mdi mdi-file-document-outline me-1"></i> View / Download Documents
+                                                 </a>
+                                             </td>
+                                         </tr>
+                                     @else
+                                         <tr>
+                                             <th>Required Documents</th>
+                                             <td><span class="badge bg-secondary">No Documents Uploaded</span></td>
+                                         </tr>
+                                     @endif
+
+                                     @if ($booking->payment_proof_url)
+                                         <tr>
+                                             <th>Payment Proof</th>
+                                             <td>
+                                                 <a href="{{ $booking->payment_proof_url }}" target="_blank" class="btn btn-sm btn-success">
+                                                     <i class="mdi mdi-eye me-1"></i> View / Download Payment Proof
+                                                 </a>
+                                             </td>
+                                         </tr>
+                                     @else
+                                         <tr>
+                                             <th>Payment Proof</th>
+                                             <td><span class="badge bg-secondary">No Proof Uploaded</span></td>
+                                         </tr>
+                                     @endif
                                 </table>
 
                             </div>
@@ -89,8 +121,8 @@
                                 <h5 class="mb-0">Package Info</h5>
                             </div>
                             <div class="card-body">
-                                <p><strong>Title:</strong> {{ $booking->package->title ?? 'N/A' }}</p>
-                                <p class="text-uppercase"><strong>Type:</strong> {{ $booking->package->type ?? $booking->package_type ?? 'N/A' }}</p>
+                                <p><strong>Title:</strong> {{ $booking->package->title ?? 'Custom Service Request' }}</p>
+                                <p><strong>Type:</strong> <span class="badge bg-purple text-white text-uppercase">{{ str_replace('_', ' ', $booking->package->type ?? $booking->package_type ?? 'N/A') }}</span></p>
                                 <p><strong>Applied By:</strong> {{ $booking->user->name ?? 'Guest' }}</p>
                             </div>
                         </div>

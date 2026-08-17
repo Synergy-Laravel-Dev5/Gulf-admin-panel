@@ -29,7 +29,8 @@
                                                 <th>Phone</th>
                                                 <th>Package</th>
                                                 <th>Type</th>
-                                                <th>Room Type</th>
+                                                 <th>Room Type</th>
+                                                <th>Documents</th>
                                                 <th>Status</th>
                                                 <th>Action</th>
                                             </tr>
@@ -40,9 +41,38 @@
                                                     <td>{{ $loop->iteration }}</td>
                                                     <td><strong>{{ $booking->full_name }}</strong></td>
                                                     <td>{{ $booking->phone }}</td>
-                                                    <td>{{ $booking->package->title ?? 'N/A' }}</td>
-                                                    <td class="text-uppercase">{{ $booking->package->type ?? $booking->package_type ?? 'N/A' }}</td>
+                                                    <td>
+                                                        @if ($booking->package)
+                                                            {{ $booking->package->title }}
+                                                        @else
+                                                            <span class="badge bg-soft-primary text-primary border border-primary">Custom Request</span>
+                                                        @endif
+                                                    </td>
+                                                    <td>
+                                                        @php
+                                                            $pType = strtolower($booking->package->type ?? $booking->package_type ?? 'N/A');
+                                                        @endphp
+                                                        @if (str_starts_with($pType, 'custom_') || str_contains($pType, 'custom'))
+                                                            <span class="badge bg-purple text-white text-uppercase">{{ str_replace('_', ' ', $pType) }}</span>
+                                                        @else
+                                                            <span class="text-uppercase">{{ $pType }}</span>
+                                                        @endif
+                                                    </td>
                                                     <td class="text-capitalize">{{ $booking->room_type }}</td>
+                                                    <td>
+                                                        @if ($booking->passport_document_url)
+                                                            <span class="badge bg-soft-primary text-primary border border-primary me-1 mb-1" title="Passport Copy Uploaded"><i class="mdi mdi-passport me-1"></i> Passport</span>
+                                                        @endif
+                                                        @if ($booking->documents_upload_url)
+                                                            <span class="badge bg-soft-info text-info border border-info me-1 mb-1" title="Documents Uploaded"><i class="mdi mdi-file-document me-1"></i> Docs</span>
+                                                        @endif
+                                                        @if ($booking->payment_proof_url)
+                                                            <span class="badge bg-soft-success text-success border border-success me-1 mb-1" title="Payment Proof Uploaded"><i class="mdi mdi-cash-check me-1"></i> Proof</span>
+                                                        @endif
+                                                        @if (!$booking->passport_document_url && !$booking->documents_upload_url && !$booking->payment_proof_url)
+                                                            <span class="text-muted small">None</span>
+                                                        @endif
+                                                    </td>
                                                     <td>
                                                         @if ($booking->status == 'confirmed')
                                                             <span class="badge bg-success">Confirmed</span>
