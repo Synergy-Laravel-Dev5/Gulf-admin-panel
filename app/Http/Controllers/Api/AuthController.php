@@ -300,4 +300,68 @@ class AuthController extends Controller
             'message' => 'Account deactivated successfully.'
         ]);
     }
+
+    public function googleLogin(Request $request)
+    {
+        $validator = \Illuminate\Support\Facades\Validator::make($request->all(), [
+            'email'           => 'required|email',
+            'name'            => 'nullable|string|max:255',
+            'google_id'       => 'nullable|string|max:255',
+            'profile_picture' => 'nullable|string',
+        ]);
+
+        if ($validator->fails()) {
+            return response()->json([
+                'status'  => false,
+                'message' => 'Validation error',
+                'errors'  => $validator->errors()
+            ], 422);
+        }
+
+        $user = User::where('email', $request->email)->first();
+
+        if (!$user) {
+            $user = User::create([
+                'name'              => $request->name ?? strstr($request->email, '@', true),
+                'email'             => $request->email,
+                'password'          => Hash::make(\Illuminate\Support\Str::random(16)),
+                'status'            => 'active',
+                'user_type'         => 'client',
+                'profile_picture'   => $request->profile_picture,
+                'email_verified_at' => now(),
+            ]);
+        } else {
+            if ($user->status === 'inactive') {
+                return response()->json([
+                    'status'  => false,
+                    'message' => 'Your account is inactive. Please contact admin.'
+                ], 403);
+            }
+            if ($request->filled('name')) {
+                $user->name = $request->name;
+            }
+            if ($request->filled('profile_picture') && !$user->profile_picture) {
+                $user->profile_picture = $request->profile_picture;
+            }
+            $user->save();
+        }
+
+        $token = $user->createToken('auth_token')->plainTextToken;
+
+        return response()->json([
+            'status'  => true,
+            'message' => 'Google Login Successful',
+            'token'   => $token,
+            'user'    => [
+                'id'                  => $user->id,
+                'name'                => $user->name,
+                'email'               => $user->email,
+                'phone'               => $user->phone,
+                'status'              => $user->status,
+                'user_type'           => $user->user_type,
+                'profile_picture'     => $user->profile_picture,
+                'profile_picture_url' => $user->profile_picture_url,
+            ]
+        ]);
+    }
 }
