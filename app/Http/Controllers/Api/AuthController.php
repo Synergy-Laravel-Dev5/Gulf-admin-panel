@@ -324,6 +324,7 @@ class AuthController extends Controller
             $user = User::create([
                 'name'              => $request->name ?? strstr($request->email, '@', true),
                 'email'             => $request->email,
+                'google_id'         => $request->google_id,
                 'password'          => Hash::make(\Illuminate\Support\Str::random(16)),
                 'status'            => 'active',
                 'user_type'         => 'client',
@@ -336,6 +337,9 @@ class AuthController extends Controller
                     'status'  => false,
                     'message' => 'Your account is inactive. Please contact admin.'
                 ], 403);
+            }
+            if ($request->filled('google_id')) {
+                $user->google_id = $request->google_id;
             }
             if ($request->filled('name')) {
                 $user->name = $request->name;

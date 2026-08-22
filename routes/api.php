@@ -52,6 +52,7 @@ Route::get('hotels/{id}', [HotelController::class, 'show']);
 
 Route::post('package-bookings', [PackageBookingController::class, 'store']);
 Route::post('hotel-bookings', [ApiHotelBookingController::class, 'store']);
+Route::post('hotel-requests', [ApiHotelBookingController::class, 'store']);
 
 // Public Tutorial Routes
 Route::get('tutorials', [TutorialController::class, 'index']);

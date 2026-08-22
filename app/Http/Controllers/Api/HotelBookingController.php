@@ -24,6 +24,7 @@ class HotelBookingController extends Controller
             'no_of_rooms'      => 'nullable|integer|min:1',
             'meal'             => 'nullable|string|max:255',
             'documents_upload' => 'nullable|file|mimes:pdf,jpg,jpeg,png,webp|max:10240',
+            'passport_document'=> 'nullable|file|mimes:pdf,jpg,jpeg,png,webp|max:10240',
             'payment_proof'    => 'nullable|file|mimes:pdf,jpg,jpeg,png,webp|max:10240',
         ]);
 
@@ -43,7 +44,7 @@ class HotelBookingController extends Controller
             $hotelName = 'Custom Hotel Request';
         }
 
-        $userId = Auth::guard('sanctum')->id() ?? Auth::id();
+        $notes = $request->notes ?? $request->special_requests ?? $request->requirements;
 
         $data = [
             'user_id'     => $userId,
@@ -57,6 +58,7 @@ class HotelBookingController extends Controller
             'check_out'   => $request->check_out ?? now()->addDays(1)->format('Y-m-d'),
             'no_of_rooms' => $request->no_of_rooms ?? 1,
             'meal'        => $request->meal ?? 'None',
+            'notes'       => $notes,
             'status'      => 'pending',
         ];
 
@@ -70,6 +72,13 @@ class HotelBookingController extends Controller
             $filename = time() . '_doc_' . uniqid() . '.' . $file->getClientOriginalExtension();
             $file->move($destinationPath, $filename);
             $data['documents_upload'] = 'uploads/hotel_bookings/' . $filename;
+        }
+
+        if ($request->hasFile('passport_document')) {
+            $file = $request->file('passport_document');
+            $filename = time() . '_passport_' . uniqid() . '.' . $file->getClientOriginalExtension();
+            $file->move($destinationPath, $filename);
+            $data['passport_document'] = 'uploads/hotel_bookings/' . $filename;
         }
 
         if ($request->hasFile('payment_proof')) {
