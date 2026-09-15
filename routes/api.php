@@ -11,6 +11,7 @@ use App\Http\Controllers\Api\InternationalPackageController;
 use App\Http\Controllers\Api\PackageBookingController;
 use App\Http\Controllers\Api\HotelController;
 use App\Http\Controllers\Api\HotelBookingController as ApiHotelBookingController;
+use App\Http\Controllers\Api\FlightRequestController as ApiFlightRequestController;
 use App\Http\Controllers\Api\ProfileController;
 use App\Http\Controllers\Api\TutorialController;
 use App\Http\Controllers\Api\PageController;
@@ -53,6 +54,7 @@ Route::get('hotels/{id}', [HotelController::class, 'show']);
 Route::post('package-bookings', [PackageBookingController::class, 'store']);
 Route::post('hotel-bookings', [ApiHotelBookingController::class, 'store']);
 Route::post('hotel-requests', [ApiHotelBookingController::class, 'store']);
+Route::post('flight-requests', [ApiFlightRequestController::class, 'store']);
 
 // Public Tutorial Routes
 Route::get('tutorials', [TutorialController::class, 'index']);
@@ -94,6 +96,9 @@ Route::middleware('auth:sanctum')->group(function () {
 
     Route::get('hotel-bookings', [ApiHotelBookingController::class, 'index']);
     Route::get('hotel-bookings/{id}', [ApiHotelBookingController::class, 'show']);
+
+    Route::get('flight-requests', [ApiFlightRequestController::class, 'index']);
+    Route::get('flight-requests/{id}', [ApiFlightRequestController::class, 'show']);
 
     // Admin Tutorial Routes
     Route::post('tutorials', [TutorialController::class, 'store']);

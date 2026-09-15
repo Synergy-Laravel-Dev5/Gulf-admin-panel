@@ -184,6 +184,13 @@
                 </li>
 
                 <li>
+                    <a class="tp-link" href="{{ route('flight-request.index') }}">
+                        <i data-feather="send"></i>
+                        <span>Flight Requests</span>
+                    </a>
+                </li>
+
+                <li>
                     <a class="tp-link" href="{{ route('transportation-route.index') }}">
                         <i data-feather="map"></i>
                         <span>Transportation Routes</span>

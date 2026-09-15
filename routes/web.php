@@ -16,6 +16,7 @@ use App\Http\Controllers\VisaCountryController;
 use App\Http\Controllers\MealTypeController;
 use App\Http\Controllers\CityController;
 use App\Http\Controllers\HotelBookingController;
+use App\Http\Controllers\FlightRequestController;
 use App\Http\Controllers\TransportationRouteController;
 use Illuminate\Support\Facades\Mail;
 
@@ -190,6 +191,15 @@ Route::middleware('auth')->group(function () {
                 Route::get('/show/{id}', 'show')->name('hotel-booking.show');
                 Route::put('/update-status/{id}', 'updateStatus')->name('hotel-booking.update-status');
                 Route::delete('/delete/{id}', 'destroy')->name('hotel-booking.delete');
+            });
+
+        Route::controller(FlightRequestController::class)
+            ->prefix('flight-request')
+            ->group(function () {
+                Route::get('/', 'index')->name('flight-request.index');
+                Route::get('/show/{id}', 'show')->name('flight-request.show');
+                Route::put('/update-status/{id}', 'updateStatus')->name('flight-request.update-status');
+                Route::delete('/delete/{id}', 'destroy')->name('flight-request.delete');
             });
 
         Route::controller(TransportationRouteController::class)
