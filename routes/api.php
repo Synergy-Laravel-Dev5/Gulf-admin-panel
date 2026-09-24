@@ -52,9 +52,20 @@ Route::get('hotels/cities', [HotelController::class, 'cities']);
 Route::get('hotels/{id}', [HotelController::class, 'show']);
 
 Route::post('package-bookings', [PackageBookingController::class, 'store']);
+Route::post('package-bookings/{id}/cancel', [PackageBookingController::class, 'cancel']);
+Route::put('package-bookings/{id}/cancel', [PackageBookingController::class, 'cancel']);
+Route::post('package-bookings/cancel/{id}', [PackageBookingController::class, 'cancel']);
+
 Route::post('hotel-bookings', [ApiHotelBookingController::class, 'store']);
 Route::post('hotel-requests', [ApiHotelBookingController::class, 'store']);
+Route::post('hotel-bookings/{id}/cancel', [ApiHotelBookingController::class, 'cancel']);
+Route::put('hotel-bookings/{id}/cancel', [ApiHotelBookingController::class, 'cancel']);
+Route::post('hotel-bookings/cancel/{id}', [ApiHotelBookingController::class, 'cancel']);
+
 Route::post('flight-requests', [ApiFlightRequestController::class, 'store']);
+Route::post('flight-requests/{id}/cancel', [ApiFlightRequestController::class, 'cancel']);
+Route::put('flight-requests/{id}/cancel', [ApiFlightRequestController::class, 'cancel']);
+Route::post('flight-requests/cancel/{id}', [ApiFlightRequestController::class, 'cancel']);
 
 // Public Tutorial Routes
 Route::get('tutorials', [TutorialController::class, 'index']);
@@ -93,12 +104,27 @@ Route::middleware('auth:sanctum')->group(function () {
 
     Route::get('package-bookings', [PackageBookingController::class, 'index']);
     Route::get('package-bookings/{id}', [PackageBookingController::class, 'show']);
+    Route::post('package-bookings/{id}/cancel', [PackageBookingController::class, 'cancel']);
+    Route::put('package-bookings/{id}/cancel', [PackageBookingController::class, 'cancel']);
+    Route::post('package-bookings/cancel/{id}', [PackageBookingController::class, 'cancel']);
+    Route::put('package-bookings/{id}', [PackageBookingController::class, 'updateStatus']);
+    Route::delete('package-bookings/{id}', [PackageBookingController::class, 'destroy']);
 
     Route::get('hotel-bookings', [ApiHotelBookingController::class, 'index']);
     Route::get('hotel-bookings/{id}', [ApiHotelBookingController::class, 'show']);
+    Route::post('hotel-bookings/{id}/cancel', [ApiHotelBookingController::class, 'cancel']);
+    Route::put('hotel-bookings/{id}/cancel', [ApiHotelBookingController::class, 'cancel']);
+    Route::post('hotel-bookings/cancel/{id}', [ApiHotelBookingController::class, 'cancel']);
+    Route::put('hotel-bookings/{id}', [ApiHotelBookingController::class, 'updateStatus']);
+    Route::delete('hotel-bookings/{id}', [ApiHotelBookingController::class, 'destroy']);
 
     Route::get('flight-requests', [ApiFlightRequestController::class, 'index']);
     Route::get('flight-requests/{id}', [ApiFlightRequestController::class, 'show']);
+    Route::post('flight-requests/{id}/cancel', [ApiFlightRequestController::class, 'cancel']);
+    Route::put('flight-requests/{id}/cancel', [ApiFlightRequestController::class, 'cancel']);
+    Route::post('flight-requests/cancel/{id}', [ApiFlightRequestController::class, 'cancel']);
+    Route::put('flight-requests/{id}', [ApiFlightRequestController::class, 'updateStatus']);
+    Route::delete('flight-requests/{id}', [ApiFlightRequestController::class, 'destroy']);
 
     // Admin Tutorial Routes
     Route::post('tutorials', [TutorialController::class, 'store']);

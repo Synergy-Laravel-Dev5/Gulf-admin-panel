@@ -71,8 +71,12 @@
                                                     <td>
                                                         <span class="badge bg-soft-dark text-dark border">
                                                             {{ $req->adults }} Adult{{ $req->adults > 1 ? 's' : '' }}
-                                                            @if($req->children > 0), {{ $req->children }} Child@endif
-                                                            @if($req->infants > 0), {{ $req->infants }} Infant@endif
+                                                            @if ($req->children > 0)
+                                                                , {{ $req->children }} Child
+                                                            @endif
+                                                            @if ($req->infants > 0)
+                                                                , {{ $req->infants }} Infant
+                                                            @endif
                                                         </span>
                                                         <br><small class="text-capitalize text-muted">{{ $req->cabin_class }} Class</small>
                                                     </td>

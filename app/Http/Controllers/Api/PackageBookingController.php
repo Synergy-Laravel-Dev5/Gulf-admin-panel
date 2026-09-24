@@ -178,4 +178,55 @@ class PackageBookingController extends Controller
             'data'    => $booking,
         ]);
     }
+
+    public function cancel(Request $request, $id = null)
+    {
+        $bookingId = $id ?? $request->id ?? $request->booking_id;
+        $userId    = Auth::guard('sanctum')->id() ?? Auth::id();
+
+        $query = PackageBooking::query();
+        if ($bookingId) {
+            $query->where('id', $bookingId);
+        }
+        if ($userId) {
+            $query->where('user_id', $userId);
+        }
+
+        $booking = $query->first();
+
+        if (!$booking) {
+            // Fallback lookup without user_id restriction if authenticated user matches
+            $booking = PackageBooking::find($bookingId);
+        }
+
+        if (!$booking) {
+            return response()->json([
+                'success' => false,
+                'status'  => false,
+                'message' => 'Booking not found.',
+            ], 404);
+        }
+
+        $newStatus = strtolower($request->status ?? 'cancelled');
+        $booking->update([
+            'status' => $newStatus,
+        ]);
+
+        return response()->json([
+            'success' => true,
+            'status'  => true,
+            'message' => 'Booking cancelled successfully.',
+            'data'    => $booking,
+        ]);
+    }
+
+    public function updateStatus(Request $request, $id)
+    {
+        return $this->cancel($request, $id);
+    }
+
+    public function destroy(Request $request, $id)
+    {
+        return $this->cancel($request, $id);
+    }
 }

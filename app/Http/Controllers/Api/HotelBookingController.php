@@ -131,4 +131,54 @@ class HotelBookingController extends Controller
             'data'    => $booking,
         ]);
     }
+
+    public function cancel(Request $request, $id = null)
+    {
+        $bookingId = $id ?? $request->id ?? $request->booking_id;
+        $userId    = Auth::guard('sanctum')->id() ?? Auth::id();
+
+        $query = HotelBooking::query();
+        if ($bookingId) {
+            $query->where('id', $bookingId);
+        }
+        if ($userId) {
+            $query->where('user_id', $userId);
+        }
+
+        $booking = $query->first();
+
+        if (!$booking) {
+            $booking = HotelBooking::find($bookingId);
+        }
+
+        if (!$booking) {
+            return response()->json([
+                'success' => false,
+                'status'  => false,
+                'message' => 'Hotel booking not found.',
+            ], 404);
+        }
+
+        $newStatus = strtolower($request->status ?? 'cancelled');
+        $booking->update([
+            'status' => $newStatus,
+        ]);
+
+        return response()->json([
+            'success' => true,
+            'status'  => true,
+            'message' => 'Hotel booking cancelled successfully.',
+            'data'    => $booking,
+        ]);
+    }
+
+    public function updateStatus(Request $request, $id)
+    {
+        return $this->cancel($request, $id);
+    }
+
+    public function destroy(Request $request, $id)
+    {
+        return $this->cancel($request, $id);
+    }
 }

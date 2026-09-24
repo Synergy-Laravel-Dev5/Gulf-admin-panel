@@ -121,4 +121,54 @@ class FlightRequestController extends Controller
             'data'    => $request,
         ]);
     }
+
+    public function cancel(Request $request, $id = null)
+    {
+        $requestId = $id ?? $request->id ?? $request->request_id;
+        $userId    = Auth::guard('sanctum')->id() ?? Auth::id();
+
+        $query = FlightRequest::query();
+        if ($requestId) {
+            $query->where('id', $requestId);
+        }
+        if ($userId) {
+            $query->where('user_id', $userId);
+        }
+
+        $flightReq = $query->first();
+
+        if (!$flightReq) {
+            $flightReq = FlightRequest::find($requestId);
+        }
+
+        if (!$flightReq) {
+            return response()->json([
+                'success' => false,
+                'status'  => false,
+                'message' => 'Flight request not found.',
+            ], 404);
+        }
+
+        $newStatus = strtolower($request->status ?? 'cancelled');
+        $flightReq->update([
+            'status' => $newStatus,
+        ]);
+
+        return response()->json([
+            'success' => true,
+            'status'  => true,
+            'message' => 'Flight request cancelled successfully.',
+            'data'    => $flightReq,
+        ]);
+    }
+
+    public function updateStatus(Request $request, $id)
+    {
+        return $this->cancel($request, $id);
+    }
+
+    public function destroy(Request $request, $id)
+    {
+        return $this->cancel($request, $id);
+    }
 }
