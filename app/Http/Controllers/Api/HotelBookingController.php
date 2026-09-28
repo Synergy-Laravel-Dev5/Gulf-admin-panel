@@ -44,7 +44,8 @@ class HotelBookingController extends Controller
             $hotelName = 'Custom Hotel Request';
         }
 
-        $notes = $request->notes ?? $request->special_requests ?? $request->requirements;
+        $notes  = $request->notes ?? $request->special_requests ?? $request->requirements;
+        $userId = Auth::guard('sanctum')->id() ?? Auth::id();
 
         $data = [
             'user_id'     => $userId,
@@ -58,9 +59,12 @@ class HotelBookingController extends Controller
             'check_out'   => $request->check_out ?? now()->addDays(1)->format('Y-m-d'),
             'no_of_rooms' => $request->no_of_rooms ?? 1,
             'meal'        => $request->meal ?? 'None',
-            'notes'       => $notes,
             'status'      => 'pending',
         ];
+
+        if (\Illuminate\Support\Facades\Schema::hasColumn('hotel_bookings', 'notes')) {
+            $data['notes'] = $notes;
+        }
 
         $destinationPath = public_path('uploads/hotel_bookings');
         if (!file_exists($destinationPath)) {

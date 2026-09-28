@@ -11,9 +11,12 @@ class VisaCountryController extends Controller
 {
     public function index(): JsonResponse
     {
-        $countries = VisaCountry::where('is_active', true)
+        $countries = VisaCountry::with(['visaTypes' => function ($q) {
+            $q->where('is_active', true);
+        }])
+            ->where('is_active', true)
             ->orderBy('country_name')
-            ->get(['id', 'country_name', 'country_code']);
+            ->get();
 
         return response()->json([
             'status' => true,

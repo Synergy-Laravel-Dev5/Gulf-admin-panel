@@ -52,20 +52,36 @@ Route::get('hotels/cities', [HotelController::class, 'cities']);
 Route::get('hotels/{id}', [HotelController::class, 'show']);
 
 Route::post('package-bookings', [PackageBookingController::class, 'store']);
+Route::post('package-bookings/cancel', [PackageBookingController::class, 'cancel']);
 Route::post('package-bookings/{id}/cancel', [PackageBookingController::class, 'cancel']);
 Route::put('package-bookings/{id}/cancel', [PackageBookingController::class, 'cancel']);
 Route::post('package-bookings/cancel/{id}', [PackageBookingController::class, 'cancel']);
 
 Route::post('hotel-bookings', [ApiHotelBookingController::class, 'store']);
 Route::post('hotel-requests', [ApiHotelBookingController::class, 'store']);
+Route::post('hotel-bookings/cancel', [ApiHotelBookingController::class, 'cancel']);
 Route::post('hotel-bookings/{id}/cancel', [ApiHotelBookingController::class, 'cancel']);
 Route::put('hotel-bookings/{id}/cancel', [ApiHotelBookingController::class, 'cancel']);
 Route::post('hotel-bookings/cancel/{id}', [ApiHotelBookingController::class, 'cancel']);
 
 Route::post('flight-requests', [ApiFlightRequestController::class, 'store']);
+Route::post('flight-requests/cancel', [ApiFlightRequestController::class, 'cancel']);
 Route::post('flight-requests/{id}/cancel', [ApiFlightRequestController::class, 'cancel']);
 Route::put('flight-requests/{id}/cancel', [ApiFlightRequestController::class, 'cancel']);
 Route::post('flight-requests/cancel/{id}', [ApiFlightRequestController::class, 'cancel']);
+
+// Flight Booking & Flights Cancellation Aliases
+Route::post('flight-bookings/cancel', [ApiFlightRequestController::class, 'cancel']);
+Route::post('flight-bookings/{id}/cancel', [ApiFlightRequestController::class, 'cancel']);
+Route::put('flight-bookings/{id}/cancel', [ApiFlightRequestController::class, 'cancel']);
+Route::post('flight-bookings/cancel/{id}', [ApiFlightRequestController::class, 'cancel']);
+Route::delete('flight-bookings/{id}', [ApiFlightRequestController::class, 'destroy']);
+
+Route::post('flights/cancel', [ApiFlightRequestController::class, 'cancel']);
+Route::post('flights/{id}/cancel', [ApiFlightRequestController::class, 'cancel']);
+Route::put('flights/{id}/cancel', [ApiFlightRequestController::class, 'cancel']);
+Route::post('flights/cancel/{id}', [ApiFlightRequestController::class, 'cancel']);
+Route::delete('flights/{id}', [ApiFlightRequestController::class, 'destroy']);
 
 // Public Tutorial Routes
 Route::get('tutorials', [TutorialController::class, 'index']);
