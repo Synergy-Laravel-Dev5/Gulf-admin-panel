@@ -144,12 +144,30 @@ class PackageBookingController extends Controller
 
     public function index(Request $request)
     {
-        $userId = Auth::guard('sanctum')->id() ?? Auth::id();
+        list($user, $isAdmin) = $this->getAuthenticatedUserAndAdminState();
 
-        $bookings = PackageBooking::with('package')
-            ->where('user_id', $userId)
-            ->latest()
-            ->get();
+        if (!$user) {
+            return response()->json([
+                'success' => false,
+                'message' => 'Unauthenticated.',
+            ], 401);
+        }
+
+        $query = PackageBooking::with('package')->latest();
+
+        if ($isAdmin) {
+            if ($request->has('user_id') && !empty($request->user_id)) {
+                $query->where('user_id', $request->user_id);
+            }
+        } else {
+            $query->where('user_id', $user->id);
+        }
+
+        $bookings = $query->get();
+
+        foreach ($bookings as $booking) {
+            $this->formatBooking($booking);
+        }
 
         return response()->json([
             'success' => true,
@@ -159,19 +177,31 @@ class PackageBookingController extends Controller
 
     public function show($id)
     {
-        $userId = Auth::guard('sanctum')->id() ?? Auth::id();
+        list($user, $isAdmin) = $this->getAuthenticatedUserAndAdminState();
 
-        $booking = PackageBooking::with('package')
-            ->where('id', $id)
-            ->where('user_id', $userId)
-            ->first();
+        if (!$user) {
+            return response()->json([
+                'success' => false,
+                'message' => 'Unauthenticated.',
+            ], 401);
+        }
+
+        $query = PackageBooking::with('package')->where('id', $id);
+
+        if (!$isAdmin) {
+            $query->where('user_id', $user->id);
+        }
+
+        $booking = $query->first();
 
         if (!$booking) {
             return response()->json([
                 'success' => false,
-                'message' => 'Booking not found.',
+                'message' => 'Booking not found or access denied.',
             ], 404);
         }
+
+        $this->formatBooking($booking);
 
         return response()->json([
             'success' => true,
@@ -179,31 +209,70 @@ class PackageBookingController extends Controller
         ]);
     }
 
+    private function getAuthenticatedUserAndAdminState()
+    {
+        $user = Auth::guard('sanctum')->user() ?? Auth::user();
+        if (!$user) {
+            return [null, false];
+        }
+
+        $role     = strtolower($user->role ?? '');
+        $userType = strtolower($user->user_type ?? '');
+        $isAdmin  = (
+            $role === 'admin' || $role === 'super admin' || $role === 'super-admin' ||
+            $userType === 'admin' || $userType === 'super admin' || $userType === 'super-admin' ||
+            (method_exists($user, 'hasRole') && ($user->hasRole('admin') || $user->hasRole('Super Admin') || $user->hasRole('Admin')))
+        );
+
+        return [$user, $isAdmin];
+    }
+
+    private function formatBooking($booking)
+    {
+        if ($booking && $booking->package) {
+            $pkg = $booking->package;
+            if ($pkg->image) {
+                if (str_contains($pkg->image, 'http://') || str_contains($pkg->image, 'https://')) {
+                    $pkg->image_url = $pkg->image;
+                } elseif (str_contains($pkg->image, '/')) {
+                    $pkg->image_url = asset('storage/' . $pkg->image);
+                } else {
+                    $folder = strtolower($booking->package_type ?? 'package');
+                    $pkg->image_url = asset('assets/images/packages/' . $folder . '/' . $pkg->image);
+                }
+            } else {
+                $pkg->image_url = null;
+            }
+        }
+        return $booking;
+    }
+
     public function cancel(Request $request, $id = null)
     {
         $bookingId = $id ?? $request->id ?? $request->booking_id;
-        $userId    = Auth::guard('sanctum')->id() ?? Auth::id();
+        list($user, $isAdmin) = $this->getAuthenticatedUserAndAdminState();
 
-        $query = PackageBooking::query();
-        if ($bookingId) {
-            $query->where('id', $bookingId);
+        if (!$user) {
+            return response()->json([
+                'success' => false,
+                'status'  => false,
+                'message' => 'Unauthenticated.',
+            ], 401);
         }
-        if ($userId) {
-            $query->where('user_id', $userId);
+
+        $query = PackageBooking::where('id', $bookingId);
+
+        if (!$isAdmin) {
+            $query->where('user_id', $user->id);
         }
 
         $booking = $query->first();
 
         if (!$booking) {
-            // Fallback lookup without user_id restriction if authenticated user matches
-            $booking = PackageBooking::find($bookingId);
-        }
-
-        if (!$booking) {
             return response()->json([
                 'success' => false,
                 'status'  => false,
-                'message' => 'Booking not found.',
+                'message' => 'Booking not found or access denied.',
             ], 404);
         }
 
